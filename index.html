@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Freefall</title>
+    <style>
+        @font-face {
+            font-family: 'C64';
+            src: url('fontC64.ttf') format('truetype');
+        }
+        body {
+            font-family: 'C64', monospace;
+            background-color: #0000A0;
+            color: #FFFFFF;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            flex-direction: column;
+        }
+        .container {
+            max-width: 600px;
+            text-align: center;
+            padding: 20px;
+            background-color: #0000A0;
+            color: #FFFFFF;
+        }
+        .content {
+            display: none;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 1.5em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="output"></div>
+        <div id="content" class="content">
+            <h1>Freefall</h1>
+            <div>
+                <label for="laiva">Valitse laiva:</label>
+                <select id="laiva" onchange="updateKannet()">
+                    <option value="Viking MS Isabella">Viking MS Isabella</option>
+                    <option value="Silja Serenade">Silja Serenade</option>
+                    <option value="Viking Grace">Viking Grace</option>
+                    <option value="Tallink Megastar">Tallink Megastar</option>
+                    <option value="Eckerö Line Finlandia">Eckerö Line Finlandia</option>
+                    <option value="Tallink Silja Europa">Tallink Silja Europa</option>
+                    <option value="Viking Amorella">Viking Amorella</option>
+                    <option value="Finnlines Star">Finnlines Star</option>
+                    <option value="Viking Gabriella">Viking Gabriella</option>
+                    <option value="Viking Rosella">Viking Rosella</option>
+                    <option value="Baltic Princess">Baltic Princess</option>
+                    <option value="Silja Symphony">Silja Symphony</option>
+                    <option value="SeaWind Line">SeaWind Line</option>
+                    <!-- Lisää lisää laivoja tarpeen mukaan -->
+                </select>
+            </div>
+            <div>
+                <label for="kansi">Valitse kansi:</label>
+                <select id="kansi">
+                    <!-- Kannet täytetään JavaScriptillä -->
+                </select>
+            </div>
+            <div>
+                <label for="kaide">Seisotko kaiteen päällä?</label>
+                <select id="kaide">
+                    <option value="ei">Ei</option>
+                    <option value="kyllä">Kyllä</option>
+                </select>
+            </div>
+            <button onclick="laskeKorkeus()">Hyppää</button>
+            <div id="result" class="result"></div>
+        </div>
+    </div>
+    <script>
+        const laivat = {
+            "Viking MS Isabella": { kannet: 11, vedenAlapuolella: 2, sallitutKannet: [6, 7, 8, 9, 10, 11] },
+            "Silja Serenade": { kannet: 13, vedenAlapuolella: 3, sallitutKannet: [8, 9, 10, 11, 12, 13] },
+            "Viking Grace": { kannet: 12, vedenAlapuolella: 2, sallitutKannet: [7, 8, 9, 10, 11, 12] },
+            "Tallink Megastar": { kannet: 10, vedenAlapuolella: 1, sallitutKannet: [5, 6, 7, 8, 9, 10] },
+            "Eckerö Line Finlandia": { kannet: 9, vedenAlapuolella: 2, sallitutKannet: [5, 6, 7, 8, 9] },
+            "Tallink Silja Europa": { kannet: 14, vedenAlapuolella: 3, sallitutKannet: [9, 10, 11, 12, 13, 14] },
+            "Viking Amorella": { kannet: 10, vedenAlapuolella: 2, sallitutKannet: [6, 7, 8, 9, 10] },
+            "Finnlines Star": { kannet: 12, vedenAlapuolella: 2, sallitutKannet: [7, 8, 9, 10, 11, 12] },
+            "Viking Gabriella": { kannet: 11, vedenAlapuolella: 2, sallitutKannet: [6, 7, 8, 9, 10, 11] },
+            "Viking Rosella": { kannet: 9, vedenAlapuolella: 1, sallitutKannet: [5, 6, 7, 8, 9] },
+            "Baltic Princess": { kannet: 12, vedenAlapuolella: 3, sallitutKannet: [8, 9, 10, 11, 12] },
+            "Silja Symphony": { kannet: 13, vedenAlapuolella: 3, sallitutKannet: [8, 9, 10, 11, 12, 13] },
+            "SeaWind Line": { kannet: 8, vedenAlapuolella: 2, sallitutKannet: [5, 6, 7, 8] },
+            // Lisää lisää laivoja tarpeen mukaan
+        };
+
+        function updateKannet() {
+            const laivaValinta = document.getElementById('laiva').value;
+            const laiva = laivat[laivaValinta];
+            const kansiSelect = document.getElementById('kansi');
+            kansiSelect.innerHTML = '';
+
+            for (let i = 0; i < laiva.sallitutKannet.length; i++) {
+                const option = document.createElement('option');
+                option.value = laiva.sallitutKannet[i];
+                option.text = `Kansi ${laiva.sallitutKannet[i]}`;
+                kansiSelect.appendChild(option);
+            }
+        }
+
+        function laskeKorkeus() {
+            const laivaValinta = document.getElementById('laiva').value;
+            const valittuKansi = parseInt(document.getElementById('kansi').value);
+            const vedenAlapuolella = laivat[laivaValinta].vedenAlapuolella;
+            let hyppyKorkeus = valittuKansi - vedenAlapuolella;
+
+            const kaideValinta = document.getElementById('kaide').value;
+            if (kaideValinta === 'kyllä') {
+                hyppyKorkeus += 1; // Lisää yksi metri jos seisotaan kaiteen päällä
+            }
+
+            const resultDiv = document.getElementById('result');
+            resultDiv.textContent = `Hyppykorkeus on ${hyppyKorkeus} kerrosta merenpintaan.`;
+        }
+
+        function typeWriter(text, i, fnCallback) {
+            if (i < text.length) {
+                document.getElementById("output").innerHTML += text.charAt(i);
+                setTimeout(function() {
+                    typeWriter(text, i + 1, fnCallback)
+                }, 50);
+            } else if (typeof fnCallback == 'function') {
+                setTimeout(fnCallback, 700);
+            }
+        }
+
+        function startTextAnimation() {
+            document.getElementById("content").style.display = "block";
+            typeWriter('Valitse laiva, kansi ja kaide.', 0);
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            startTextAnimation();
+        });
+
+        // Päivitä kannet alussa valitulle laivalle
+        updateKannet();
+    </script>
+</body>
+</html>
