@@ -66,7 +66,7 @@
         }
         .line {
             position: absolute;
-            top: 66px;
+            top: 80px; /* Moved down */
             right: 0;
             width: 200px;
             height: 10px;
@@ -74,7 +74,7 @@
         }
         .character {
             position: absolute;
-            top: 0;
+            top: 20px; /* Moved down */
             right: 10px; /* Moved slightly to the left */
             width: 60px;
             height: 66px;
@@ -98,8 +98,8 @@
             opacity: 0;
         }
         @keyframes fall {
-            0% { top: 0; }
-            10% { top: -20px; } /* Simulate jump upwards */
+            0% { top: 20px; } /* Adjusted start position */
+            10% { top: 0px; } /* Simulate jump upwards */
             100% { top: calc(100% - 50px - 66px); }
         }
         @keyframes spin {
@@ -201,7 +201,7 @@
                 option.value = ship.allowedDecks[i];
                 option.text = `Kansi ${ship.allowedDecks[i]}`;
                 deckSelect.appendChild(option);
-            }
+            });
         }
 
         function calculateSpeed(height) {
@@ -241,13 +241,11 @@
             setTimeout(() => {
                 speedDisplay.textContent = `${speedKmH} km/h`;
                 speedDisplay.style.opacity = '1';
-
                 if (Math.random() < 0.5) {
                     splash.style.transform = 'scaleX(-1)'; // Flip horizontally
                 } else {
                     splash.style.transform = 'scaleX(1)';
                 }
-
                 splash.style.animation = 'splash 500ms ease-in-out';
                 setTimeout(() => {
                     splash.style.opacity = '0';
