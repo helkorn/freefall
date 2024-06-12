@@ -12,7 +12,7 @@
         body {
             font-family: 'C64', monospace;
             background-color: #000000;
-            color: #87CEFA; /* Vaaleansininen */
+            color: #87CEFA;
             margin: 0;
             padding: 20px;
             display: flex;
@@ -23,18 +23,20 @@
         }
         .container {
             position: relative;
-            width: 600px;
-            height: 600px;
-            background-color: #0000FF; /* Sininen tausta */
+            width: 100%;
+            max-width: 600px;
+            height: 100%;
+            max-height: 600px;
+            background-color: #0000FF;
             padding: 20px;
             box-sizing: border-box;
-            border: 4px solid #000080; /* Tummansininen reunus */
+            border: 4px solid #000080;
         }
         #output {
             white-space: pre;
             text-align: left;
             margin-left: 10px;
-            color: #87CEFA; /* Vaaleansininen */
+            color: #87CEFA;
         }
         .content {
             display: none;
@@ -46,7 +48,7 @@
         }
         select {
             background: black;
-            color: #87CEFA; /* Vaaleansininen */
+            color: #87CEFA;
             border: none;
             font-family: 'C64', monospace;
             font-size: 16px;
@@ -54,7 +56,7 @@
         }
         button {
             background: black;
-            color: #87CEFA; /* Vaaleansininen */
+            color: #87CEFA;
             border: 1px solid #87CEFA;
             padding: 5px 10px;
             font-family: 'C64', monospace;
@@ -64,8 +66,8 @@
         }
         .line {
             position: absolute;
-            top: 0;
-            left: 200px;
+            top: 66px;
+            right: 0;
             width: 200px;
             height: 10px;
             background: white;
@@ -73,7 +75,7 @@
         .character {
             position: absolute;
             top: 0;
-            left: 270px;
+            right: 0;
             width: 60px;
             height: 66px;
             background-image: url('sprites/monkey_sprite_1.png');
@@ -84,7 +86,7 @@
             bottom: 0;
             left: 0;
             width: 100%;
-            height: 50px;
+            height: 100px;
             background: url('water_texture.png') repeat-x;
         }
         .speed-display {
@@ -225,19 +227,17 @@
             const jumpButton = document.getElementById('jumpButton');
             const replayLink = document.getElementById('replayLink');
 
-            // Hide jump button and start character animation
             jumpButton.style.display = 'none';
-            character.style.animation = `fall ${fallDuration}ms ease-in, spin ${spinDuration}ms linear`;
-            
+            character.style.animation = `fall 3000ms ease-in, spin 3000ms linear`;
+
             let startTime = null;
-            const fallDuration = 3000; // 3 seconds
-            const spinDuration = Math.random() * 2 + 1 * 1000; // Random spin duration between 1 and 3 seconds
+            const fallDuration = 3000; // 3 sekuntia
 
             function updateSpeed(timestamp) {
                 if (!startTime) startTime = timestamp;
                 const elapsed = timestamp - startTime;
                 const progress = Math.min(elapsed / fallDuration, 1);
-                const speed = Math.round(progress * parseFloat(speedKmH)); // Speed in km/h
+                const speed = Math.round(progress * parseFloat(speedKmH));
                 speedDisplay.textContent = `${speed} km/h`;
 
                 if (progress < 1) {
@@ -254,7 +254,7 @@
         }
 
         function restart() {
-            window.location.reload(); // Reload the page to restart
+            window.location.reload();
         }
 
         function typeWriter(text, i, fnCallback, speed = 50) {
