@@ -133,7 +133,7 @@
                 option.value = ship.allowedDecks[i];
                 option.text = `Kansi ${ship.allowedDecks[i]}`;
                 deckSelect.appendChild(option);
-            });
+            }
         }
 
         function calculateSpeed(height) {
@@ -163,16 +163,8 @@
             if (i < text.length) {
                 const char = text.charAt(i);
                 const output = document.getElementById("output");
-                
-                if (char === '[') {
-                    const selectId = text.slice(i + 1, text.indexOf(']', i));
-                    output.innerHTML += `<select id="${selectId}" onchange="updateDecks()"></select>`;
-                    i = text.indexOf(']', i) + 1;
-                } else {
-                    output.innerHTML += char;
-                    i++;
-                }
-                
+                output.innerHTML += char;
+                i++;
                 setTimeout(function() {
                     typeWriter(text, i, fnCallback)
                 }, 50);
@@ -215,4 +207,3 @@ POKE 53280, 0
     </script>
 </body>
 </html>
-
