@@ -45,7 +45,7 @@
             align-items: center;
         }
         select {
-            background: blue; /* Sininen tausta */
+            background: black;
             color: #87CEFA; /* Vaaleansininen */
             border: none;
             font-family: 'C64', monospace;
@@ -60,7 +60,7 @@
             font-family: 'C64', monospace;
             font-size: 16px;
             cursor: pointer;
-            margin-top: 20px; /* Increased margin to move it down by one line */
+            margin-top: 10px;
         }
     </style>
 </head>
@@ -198,7 +198,7 @@ POKE 53280, 0
 3510 PRINT "the story ends."
 3520 END
 
-3530 
+;
 
                 typeWriter(remainingText, 0, () => {
                     document.getElementById("content").style.display = "block";
