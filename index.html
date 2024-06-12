@@ -95,7 +95,6 @@
             left: 10px;
             font-size: 1.5em;
             color: darkgray;
-            opacity: 0;
         }
         @keyframes fall {
             0% { top: 0; right: 0; }
@@ -244,14 +243,11 @@
                 splash.style.animation = 'splash 500ms ease-in-out';
                 setTimeout(() => {
                     splash.style.opacity = '0';
-                    restart();
                 }, 500);
             }, 3000);
         }
 
         function restart() {
-            const speedDisplay = document.getElementById('speedDisplay');
-            speedDisplay.style.opacity = '0';
             const character = document.getElementById('character');
             character.style.animation = '';
             const jumpButton = document.getElementById('jumpButton');
