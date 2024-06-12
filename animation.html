@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Freefall Animation</title>
+    <style>
+        @font-face {
+            font-family: 'C64';
+            src: url('fonts/fontC64.ttf') format('truetype');
+        }
+        body {
+            font-family: 'C64', monospace;
+            background-color: #000000;
+            color: #FFFFFF;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            position: relative;
+            height: 100vh;
+        }
+        .line {
+            position: absolute;
+            top: 200px;
+            right: 0;
+            width: 200px;
+            height: 2px;
+            background: white;
+        }
+        .character {
+            position: absolute;
+            top: 200px;
+            right: 0;
+            width: 20px;
+            height: 22px;
+            background-image: url('sprites/monkey_sprite_1.png');
+            background-size: cover;
+            animation: fall 2s ease-in-out, spin 2s infinite steps(6);
+        }
+        .water {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 50px;
+            background: url('water_texture.png') repeat-x;
+        }
+        @keyframes fall {
+            to {
+                transform: translateY(calc(100vh - 250px));
+            }
+        }
+        @keyframes spin {
+            0% { background-image: url('sprites/monkey_sprite_1.png'); }
+            16% { background-image: url('sprites/monkey_sprite_2.png'); }
+            33% { background-image: url('sprites/monkey_sprite_3.png'); }
+            50% { background-image: url('sprites/monkey_sprite_4.png'); }
+            66% { background-image: url('sprites/monkey_sprite_5.png'); }
+            83% { background-image: url('sprites/monkey_sprite_6.png'); }
+            100% { background-image: url('sprites/monkey_sprite_1.png'); }
+        }
+        .speed-display {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-size: 1.5em;
+        }
+    </style>
+</head>
+<body>
+    <div class="line"></div>
+    <div class="character" id="character"></div>
+    <div class="water"></div>
+    <div class="speed-display" id="speedDisplay"></div>
+    <script>
+        function getQueryParams() {
+            const params = {};
+            const queryString = window.location.search.slice(1);
+            queryString.split('&').forEach(param => {
+                const [key, value] = param.split('=');
+                params[key] = decodeURIComponent(value);
+            });
+            return params;
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const params = getQueryParams();
+            const speedDisplay = document.getElementById('speedDisplay');
+            speedDisplay.textContent = `Iskeytymisnopeus: ${params.speed} km/h`;
+        });
+    </script>
+</body>
+</html>
