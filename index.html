@@ -14,10 +14,10 @@
             background-color: #000000;
             color: #87CEFA;
             margin: 0;
-            padding: 20px;
+            padding: 0;
             display: flex;
             justify-content: center;
-            align-items: center;
+            align-items: flex-start;
             height: 100vh;
             overflow: hidden;
         }
@@ -117,12 +117,11 @@
         <div id="output"></div>
         <div id="content" class="content">
             <div>
-                <label for="laiva">Laiva:</label>
+                <label for="laiva">Valitse laiva:</label>
                 <select id="laiva" onchange="updateDecks()">
                     <!-- Laivat täytetään JavaScriptillä -->
                 </select>
             </div>
-            <br><br><br><br><br>
             <div class="selection-container">
                 <div>
                     <label for="kansi">Kansi:</label>
@@ -130,9 +129,8 @@
                         <!-- Kannet täytetään JavaScriptillä -->
                     </select>
                 </div>
-                <br><br><br><br><br>
                 <div>
-                    <label for="kaide">Et kai seiso kaiteella?</label>
+                    <label for="kaide">Seisotko kaiteella?</label>
                     <select id="kaide">
                         <option value="ei">Ei</option>
                         <option value="kyllä">Kyllä</option>
@@ -222,28 +220,12 @@
 
             character.style.animation = `fall 3000ms ease-in, spin ${spinDuration}ms linear`;
 
-            let startTime = null;
-            const fallDuration = 3000; // 3 seconds
-
-            function updateSpeed(timestamp) {
-                if (!startTime) startTime = timestamp;
-                const elapsed = timestamp - startTime;
-                const progress = Math.min(elapsed / fallDuration, 1);
-                const speed = Math.round(progress * parseFloat(speedKmH)); // Speed in km/h
-                speedDisplay.textContent = `${speed} km/h`;
-
-                if (progress < 1) {
-                    requestAnimationFrame(updateSpeed);
-                } else {
-                    speedDisplay.style.opacity = '1';
-                    speedDisplay.style.bottom = '10px';
-                    speedDisplay.style.left = '10px';
-                    jumpButton.textContent = 'HYPPÄÄ UUDELLEEN';
-                    jumpButton.style.display = 'block';
-                }
-            }
-
-            requestAnimationFrame(updateSpeed);
+            setTimeout(() => {
+                speedDisplay.textContent = `${speedKmH} km/h`;
+                speedDisplay.style.opacity = '1';
+                jumpButton.textContent = 'HYPPÄÄ';
+                jumpButton.style.display = 'block';
+            }, 3000);
         }
 
         function restart() {
@@ -291,4 +273,3 @@ READY.
     </script>
 </body>
 </html>
-
