@@ -7,10 +7,10 @@
     <style>
         @font-face {
             font-family: 'C64';
-            src: url('fontC64.ttf') format('truetype');
+            src: url('fonts/fontC64.ttf') format('truetype');
         }
         body {
-            font-family: monospace;
+            font-family: 'C64', monospace;
             background-color: #000000;
             color: #FFFFFF;
             margin: 0;
@@ -20,6 +20,8 @@
             align-items: center;
             min-height: 100vh;
             flex-direction: column;
+            position: relative;
+            overflow: hidden;
         }
         .container {
             max-width: 600px;
@@ -35,13 +37,43 @@
             margin-top: 20px;
             font-size: 1.5em;
         }
+        .character {
+            position: absolute;
+            top: -200px;
+            right: 0;
+            width: 20px;
+            height: 22px;
+            background: url('monkeywin.png') no-repeat;
+            animation: fall 2s steps(6) infinite;
+        }
+        .character.jump {
+            transform: translateY(100vh);
+        }
+        .line {
+            position: absolute;
+            top: 200px;
+            right: 0;
+            width: 100%;
+            height: 2px;
+            background: white;
+        }
+        @keyframes fall {
+            0% { background-position: -64px -62px; }
+            16.66% { background-position: -193px -55px; }
+            33.33% { background-position: -63px -191px; }
+            50% { background-position: -192px -190px; }
+            66.66% { background-position: -67px -320px; }
+            83.33% { background-position: -193px -319px; }
+        }
     </style>
 </head>
 <body>
+    <div class="line"></div>
+    <div class="character" id="character"></div>
     <div class="container">
         <div id="output"></div>
         <div id="content" class="content">
-            <h1>Freefall</h1>
+            <h1 id="title">Freefall</h1>
             <div>
                 <label for="ship">Choose ship:</label>
             </div>
@@ -69,7 +101,7 @@
                     <option value="yes">Yes</option>
                 </select>
             </div>
-            <button onclick="calculateSpeed()">Jump</button>
+            <button onclick="jump()">Jump</button>
             <div id="result" class="result"></div>
         </div>
     </div>
@@ -135,6 +167,12 @@
             resultDiv.textContent = `Impact speed is ${speedKmH} km/h.`;
         }
 
+        function jump() {
+            const character = document.getElementById('character');
+            character.classList.add('jump');
+            setTimeout(calculateSpeed, 2000); // Give time for the jump animation
+        }
+
         function typeWriter(text, i, fnCallback) {
             if (i < text.length) {
                 document.getElementById("output").innerHTML += text.charAt(i);
@@ -148,7 +186,7 @@
 
         function startTextAnimation() {
             document.getElementById("content").style.display = "block";
-            typeWriter('', 0);
+            typeWriter('Freefall', 0);
         }
 
         document.addEventListener("DOMContentLoaded", function() {
