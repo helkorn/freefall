@@ -12,30 +12,50 @@
         body {
             font-family: 'C64', monospace;
             background-color: #000000;
-            color: #FFFFFF;
+            color: #87CEFA; /* Vaaleansininen */
             margin: 0;
             padding: 20px;
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
-            flex-direction: column;
-            position: relative;
+            height: 100vh;
             overflow: hidden;
         }
         .container {
-            max-width: 600px;
-            text-align: center;
+            position: relative;
+            width: 600px;
+            height: 600px;
+            background-color: #0000FF; /* Sininen tausta */
             padding: 20px;
-            background-color: #000000;
-            color: #FFFFFF;
+            box-sizing: border-box;
+            border: 4px solid #000080; /* Tummansininen reunus */
+        }
+        #output {
+            white-space: pre;
+            text-align: left;
+            margin-left: 10px;
+            color: #87CEFA; /* Vaaleansininen */
         }
         .content {
             display: none;
         }
-        .result {
-            margin-top: 20px;
-            font-size: 1.5em;
+        select {
+            background: black;
+            color: #87CEFA; /* Vaaleansininen */
+            border: none;
+            font-family: 'C64', monospace;
+            font-size: 16px;
+            margin-left: 5px;
+        }
+        button {
+            background: black;
+            color: #87CEFA; /* Vaaleansininen */
+            border: 1px solid #87CEFA;
+            padding: 5px 10px;
+            font-family: 'C64', monospace;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
         }
     </style>
 </head>
@@ -43,7 +63,6 @@
     <div class="container">
         <div id="output"></div>
         <div id="content" class="content">
-            <h1 id="title">Freefall</h1>
             <div>
                 <label for="laiva">Valitse laiva:</label>
             </div>
@@ -72,7 +91,6 @@
                 </select>
             </div>
             <button onclick="laskeJaHyppaa()">Hyppää</button>
-            <div id="result" class="result"></div>
         </div>
     </div>
     <script>
@@ -143,9 +161,20 @@
 
         function typeWriter(text, i, fnCallback) {
             if (i < text.length) {
-                document.getElementById("output").innerHTML += text.charAt(i);
+                const char = text.charAt(i);
+                const output = document.getElementById("output");
+                
+                if (char === '[') {
+                    const selectId = text.slice(i + 1, text.indexOf(']', i));
+                    output.innerHTML += `<select id="${selectId}" onchange="updateDecks()"></select>`;
+                    i = text.indexOf(']', i) + 1;
+                } else {
+                    output.innerHTML += char;
+                    i++;
+                }
+                
                 setTimeout(function() {
-                    typeWriter(text, i + 1, fnCallback)
+                    typeWriter(text, i, fnCallback)
                 }, 50);
             } else if (typeof fnCallback == 'function') {
                 setTimeout(fnCallback, 700);
@@ -153,8 +182,29 @@
         }
 
         function startTextAnimation() {
-            document.getElementById("content").style.display = "block";
-            typeWriter('Freefall', 0);
+            const text = `*** FREEFALL V 1.0 ***
+READY.
+
+SYS 64738 : REM KILL SWITCH
+POKE 53280, 0
+READY.
+
+10 INPUT "VALITSE LAIVA, V" [laiva]
+20 INPUT "VALITSE KANSI, V" [kansi]
+30 INPUT "SEISOTKO KAITEELLA?, V" [kaide]
+40 IF V = 1 THEN GOTO 10
+50 IF V = 2 THEN GOTO 3000
+60 IF V <> 1 AND V <> 2 THEN GOSUB 3500
+70 END
+
+3010 LOAD "FREEFALL",8,1
+3020 RUN
+
+3500 PRINT "You take the blue pill, the story ends."
+3510 END`;
+            typeWriter(text, 0, () => {
+                document.getElementById("content").style.display = "block";
+            });
         }
 
         document.addEventListener("DOMContentLoaded", function() {
