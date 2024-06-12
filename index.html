@@ -41,8 +41,8 @@
         }
         .selection-container {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            flex-direction: column;
+            align-items: flex-start;
         }
         select {
             background: black;
@@ -50,7 +50,7 @@
             border: none;
             font-family: 'C64', monospace;
             font-size: 16px;
-            margin-left: 5px;
+            margin-bottom: 10px;
         }
         button {
             background: black;
@@ -61,6 +61,62 @@
             font-size: 16px;
             cursor: pointer;
             margin-top: 10px;
+        }
+        .line {
+            position: absolute;
+            top: 0;
+            left: 200px;
+            width: 200px;
+            height: 10px;
+            background: white;
+        }
+        .character {
+            position: absolute;
+            top: 0;
+            left: 270px;
+            width: 60px;
+            height: 66px;
+            background-image: url('sprites/monkey_sprite_1.png');
+            background-size: cover;
+        }
+        .water {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 50px;
+            background: url('water_texture.png') repeat-x;
+        }
+        .speed-display {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 1.5em;
+            color: gray;
+            opacity: 0;
+        }
+        .replay-link {
+            position: absolute;
+            top: 40px;
+            right: 10px;
+            font-size: 1em;
+            color: gray;
+            cursor: pointer;
+            text-decoration: underline;
+            opacity: 0;
+        }
+        @keyframes fall {
+            0% { top: 0; }
+            100% { top: calc(100% - 50px - 66px); }
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        @keyframes showSpeed {
+            to {
+                opacity: 1;
+            }
         }
     </style>
 </head>
@@ -77,7 +133,7 @@
             <br>
             <div class="selection-container">
                 <div>
-                    <label for="kansi">Valitse kansi:</label>
+                    <label for="kansi">Kansi:</label>
                     <select id="kansi">
                         <!-- Kannet täytetään JavaScriptillä -->
                     </select>
@@ -90,8 +146,13 @@
                     </select>
                 </div>
             </div>
-            <button onclick="laskeJaHyppaa()">HYPPÄÄ</button>
+            <button onclick="laskeJaHyppaa()" id="jumpButton">HYPPÄÄ</button>
         </div>
+        <div class="line"></div>
+        <div class="character" id="character"></div>
+        <div class="water"></div>
+        <div class="speed-display" id="speedDisplay">0 km/h</div>
+        <div class="replay-link" id="replayLink" onclick="restart()">Hyppää uudelleen</div>
     </div>
     <script>
         const ships = {};
@@ -155,8 +216,45 @@
 
             const speedKmH = calculateSpeed(jumpHeight);
 
-            // Siirrytään seuraavalle sivulle ja lähetetään nopeus ja korkeus
-            window.location.href = `animation.html?speed=${speedKmH}&height=${jumpHeight}`;
+            startJumpAnimation(speedKmH);
+        }
+
+        function startJumpAnimation(speedKmH) {
+            const character = document.getElementById('character');
+            const speedDisplay = document.getElementById('speedDisplay');
+            const jumpButton = document.getElementById('jumpButton');
+            const replayLink = document.getElementById('replayLink');
+
+            // Hide jump button and start character animation
+            jumpButton.style.display = 'none';
+            character.style.animation = `fall ${fallDuration}ms ease-in, spin ${spinDuration}ms linear`;
+            
+            let startTime = null;
+            const fallDuration = 3000; // 3 seconds
+            const spinDuration = Math.random() * 2 + 1 * 1000; // Random spin duration between 1 and 3 seconds
+
+            function updateSpeed(timestamp) {
+                if (!startTime) startTime = timestamp;
+                const elapsed = timestamp - startTime;
+                const progress = Math.min(elapsed / fallDuration, 1);
+                const speed = Math.round(progress * parseFloat(speedKmH)); // Speed in km/h
+                speedDisplay.textContent = `${speed} km/h`;
+
+                if (progress < 1) {
+                    requestAnimationFrame(updateSpeed);
+                } else {
+                    speedDisplay.style.opacity = '1';
+                    replayLink.style.opacity = '1';
+                    jumpButton.textContent = 'HYPPÄÄ UUDELLEEN';
+                    jumpButton.style.display = 'block';
+                }
+            }
+
+            requestAnimationFrame(updateSpeed);
+        }
+
+        function restart() {
+            window.location.reload(); // Reload the page to restart
         }
 
         function typeWriter(text, i, fnCallback, speed = 50) {
@@ -212,3 +310,4 @@ POKE 53280, 0
     </script>
 </body>
 </html>
+
