@@ -66,7 +66,7 @@
         }
         .line {
             position: absolute;
-            top: 80px; /* Moved down */
+            top: 66px;
             right: 0;
             width: 200px;
             height: 10px;
@@ -74,7 +74,7 @@
         }
         .character {
             position: absolute;
-            top: 20px; /* Moved down */
+            top: 0;
             right: 10px; /* Moved slightly to the left */
             width: 60px;
             height: 66px;
@@ -98,9 +98,9 @@
             opacity: 0;
         }
         @keyframes fall {
-            0% { top: 20px; } /* Adjusted start position */
-            10% { top: 0px; } /* Simulate jump upwards */
-            100% { top: calc(100% - 50px - 66px); }
+            0% { top: 0; right: 10px; }
+            10% { top: -20px; right: 20px; } /* Simulate jump upwards and to the left */
+            100% { top: calc(100% - 50px - 66px); right: 10px; }
         }
         @keyframes spin {
             0% { transform: rotate(0deg); }
