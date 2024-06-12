@@ -91,21 +91,21 @@
         }
         .speed-display {
             position: absolute;
-            top: 10px;
-            right: 10px;
+            bottom: 10px;
+            left: 10px;
             font-size: 1.5em;
             color: gray;
             opacity: 0;
         }
         .replay-link {
             position: absolute;
-            top: 40px;
+            top: 10px;
             right: 10px;
             font-size: 1em;
             color: gray;
             cursor: pointer;
             text-decoration: underline;
-            opacity: 0;
+            display: none;
         }
         @keyframes fall {
             0% { top: 0; }
@@ -132,7 +132,7 @@
                     <!-- Laivat täytetään JavaScriptillä -->
                 </select>
             </div>
-            <br>
+            <br><br><br><br><br>
             <div class="selection-container">
                 <div>
                     <label for="kansi">Kansi:</label>
@@ -140,6 +140,7 @@
                         <!-- Kannet täytetään JavaScriptillä -->
                     </select>
                 </div>
+                <br><br><br><br><br>
                 <div>
                     <label for="kaide">Seisotko kaiteen päällä?</label>
                     <select id="kaide">
@@ -154,7 +155,7 @@
         <div class="character" id="character"></div>
         <div class="water"></div>
         <div class="speed-display" id="speedDisplay">0 km/h</div>
-        <div class="replay-link" id="replayLink" onclick="restart()">Hyppää uudelleen</div>
+        <button id="replayLink" onclick="restart()">HYPPÄÄ UUDELLEEN</button>
     </div>
     <script>
         const ships = {};
@@ -228,23 +229,28 @@
             const replayLink = document.getElementById('replayLink');
 
             jumpButton.style.display = 'none';
-            character.style.animation = `fall 3000ms ease-in, spin 3000ms linear`;
+            replayLink.style.display = 'none';
+            speedDisplay.style.opacity = '0';
+
+            const spinDuration = (Math.random() * 2 + 1) * 1000; // Random spin duration between 1 and 3 seconds
+
+            character.style.animation = `fall 3000ms ease-in, spin ${spinDuration}ms linear`;
 
             let startTime = null;
-            const fallDuration = 3000; // 3 sekuntia
+            const fallDuration = 3000; // 3 seconds
 
             function updateSpeed(timestamp) {
                 if (!startTime) startTime = timestamp;
                 const elapsed = timestamp - startTime;
                 const progress = Math.min(elapsed / fallDuration, 1);
-                const speed = Math.round(progress * parseFloat(speedKmH));
+                const speed = Math.round(progress * parseFloat(speedKmH)); // Speed in km/h
                 speedDisplay.textContent = `${speed} km/h`;
 
                 if (progress < 1) {
                     requestAnimationFrame(updateSpeed);
                 } else {
                     speedDisplay.style.opacity = '1';
-                    replayLink.style.opacity = '1';
+                    replayLink.style.display = 'block';
                     jumpButton.textContent = 'HYPPÄÄ UUDELLEEN';
                     jumpButton.style.display = 'block';
                 }
@@ -254,7 +260,15 @@
         }
 
         function restart() {
-            window.location.reload();
+            const speedDisplay = document.getElementById('speedDisplay');
+            speedDisplay.style.opacity = '0';
+            const character = document.getElementById('character');
+            character.style.animation = '';
+            const replayLink = document.getElementById('replayLink');
+            replayLink.style.display = 'none';
+            const jumpButton = document.getElementById('jumpButton');
+            jumpButton.style.display = 'block';
+            jumpButton.textContent = 'HYPPÄÄ';
         }
 
         function typeWriter(text, i, fnCallback, speed = 50) {
@@ -286,4 +300,3 @@ READY.
     </script>
 </body>
 </html>
-
