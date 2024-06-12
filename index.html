@@ -184,7 +184,7 @@ POKE 53280, 0
 
 10 INPUT "VALITSE LAIVA", V
 20 INPUT "VALITSE KANSI", V
-30 INPUT "SEISOTKO KAITEELLA?", V 
+30 INPUT "SEISOTKO KAITEELLA?", V
 
 40 IF V = 1 THEN GOTO 10
 50 IF V = 2 THEN GOTO 3010
@@ -194,8 +194,21 @@ POKE 53280, 0
 3010 LOAD "FREEFALL",8,1
 3020 RUN
 
-3500 PRINT "You take the blue pill, the story ends."
-3510 END`;
+3500 PRINT "You take the blue pill,"
+3510 PRINT "the story ends."
+3520 END
+
+Valitse laiva:
+(esim Viking MS Isabella)
+
+Valitse kansi:
+(esim Kansi 6)
+
+Seisotko kaiteen päällä?
+(esim Ei)
+
+Hyppää`;
+
             typeWriter(text, 0, () => {
                 document.getElementById("content").style.display = "block";
             });
