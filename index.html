@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Freefall Animation</title>
+    <title>Freefall</title>
     <style>
         @font-face {
             font-family: 'C64';
@@ -37,75 +37,41 @@
             margin-top: 20px;
             font-size: 1.5em;
         }
-        .character {
-            position: absolute;
-            top: -200px;
-            right: 0;
-            width: 20px;
-            height: 22px;
-            background-image: url('monkey_sprite_1.png');
-            background-size: cover;
-            animation: fall 2s ease-in-out, spin 2s infinite steps(6);
-        }
-        .line {
-            position: absolute;
-            top: 200px;
-            right: 0;
-            width: 100%;
-            height: 2px;
-            background: white;
-        }
-        @keyframes fall {
-            to {
-                transform: translateY(100vh);
-            }
-        }
-        @keyframes spin {
-            0% { background-image: url('monkey_sprite_1.png'); }
-            16% { background-image: url('monkey_sprite_2.png'); }
-            33% { background-image: url('monkey_sprite_3.png'); }
-            50% { background-image: url('monkey_sprite_4.png'); }
-            66% { background-image: url('monkey_sprite_5.png'); }
-            83% { background-image: url('monkey_sprite_6.png'); }
-            100% { background-image: url('monkey_sprite_1.png'); }
-        }
     </style>
 </head>
 <body>
-    <div class="line"></div>
-    <div class="character" id="character"></div>
     <div class="container">
         <div id="output"></div>
         <div id="content" class="content">
             <h1 id="title">Freefall</h1>
             <div>
-                <label for="ship">Choose ship:</label>
+                <label for="laiva">Valitse laiva:</label>
             </div>
             <div>
-                <select id="ship" onchange="updateDecks()">
-                    <!-- Ships will be populated by JavaScript -->
+                <select id="laiva" onchange="updateDecks()">
+                    <!-- Laivat täytetään JavaScriptillä -->
                 </select>
             </div>
             <br>
             <div>
-                <label for="deck">Choose deck:</label>
+                <label for="kansi">Valitse kansi:</label>
             </div>
             <div>
-                <select id="deck">
-                    <!-- Decks will be populated by JavaScript -->
+                <select id="kansi">
+                    <!-- Kannet täytetään JavaScriptillä -->
                 </select>
             </div>
             <br>
             <div>
-                <label for="rail">Standing on the rail?</label>
+                <label for="kaide">Seisotko kaiteen päällä?</label>
             </div>
             <div>
-                <select id="rail">
-                    <option value="no">No</option>
-                    <option value="yes">Yes</option>
+                <select id="kaide">
+                    <option value="ei">Ei</option>
+                    <option value="kyllä">Kyllä</option>
                 </select>
             </div>
-            <button onclick="jump()">Jump</button>
+            <button onclick="laskeJaHyppaa()">Hyppää</button>
             <div id="result" class="result"></div>
         </div>
     </div>
@@ -128,7 +94,7 @@
             });
 
         function populateShipOptions() {
-            const shipSelect = document.getElementById('ship');
+            const shipSelect = document.getElementById('laiva');
             Object.keys(ships).forEach(ship => {
                 const option = document.createElement('option');
                 option.value = ship;
@@ -139,42 +105,40 @@
         }
 
         function updateDecks() {
-            const shipChoice = document.getElementById('ship').value;
+            const shipChoice = document.getElementById('laiva').value;
             const ship = ships[shipChoice];
-            const deckSelect = document.getElementById('deck');
+            const deckSelect = document.getElementById('kansi');
             deckSelect.innerHTML = '';
 
             for (let i = 0; i < ship.allowedDecks.length; i++) {
                 const option = document.createElement('option');
                 option.value = ship.allowedDecks[i];
-                option.text = `Deck ${ship.allowedDecks[i]}`;
+                option.text = `Kansi ${ship.allowedDecks[i]}`;
                 deckSelect.appendChild(option);
             }
         }
 
-        function calculateSpeed() {
-            const shipChoice = document.getElementById('ship').value;
-            const selectedDeck = parseInt(document.getElementById('deck').value);
-            const belowWaterline = ships[shipChoice].belowWaterline;
-            let jumpHeight = (selectedDeck - belowWaterline) * 3; // Deck height estimated at 3 meters
-
-            const railChoice = document.getElementById('rail').value;
-            if (railChoice === 'yes') {
-                jumpHeight += 1; // Add one meter if standing on the rail
-            }
-
-            const g = 9.81; // Acceleration due to gravity in m/s^2
-            const speed = Math.sqrt(2 * g * jumpHeight); // Calculate speed in m/s
-            const speedKmH = (speed * 3.6).toFixed(2); // Convert speed to km/h
-
-            const resultDiv = document.getElementById('result');
-            resultDiv.textContent = `Impact speed is ${speedKmH} km/h.`;
+        function calculateSpeed(height) {
+            const g = 9.81; // Painovoiman kiihtyvyys m/s^2
+            const speed = Math.sqrt(2 * g * height); // Lasketaan nopeus m/s
+            return (speed * 3.6).toFixed(2); // Muutetaan nopeus km/h
         }
 
-        function jump() {
-            const character = document.getElementById('character');
-            character.classList.add('jump');
-            setTimeout(calculateSpeed, 2000); // Give time for the jump animation
+        function laskeJaHyppaa() {
+            const shipChoice = document.getElementById('laiva').value;
+            const selectedDeck = parseInt(document.getElementById('kansi').value);
+            const belowWaterline = ships[shipChoice].belowWaterline;
+            let jumpHeight = (selectedDeck - belowWaterline) * 3; // Kannen korkeus arvioitu 3 metriksi
+
+            const railChoice = document.getElementById('kaide').value;
+            if (railChoice === 'kyllä') {
+                jumpHeight += 1; // Lisää yksi metri jos seisotaan kaiteen päällä
+            }
+
+            const speedKmH = calculateSpeed(jumpHeight);
+
+            // Siirrytään seuraavalle sivulle ja lähetetään nopeus ja korkeus
+            window.location.href = `animation.html?speed=${speedKmH}&height=${jumpHeight}`;
         }
 
         function typeWriter(text, i, fnCallback) {
