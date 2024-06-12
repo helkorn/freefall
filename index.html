@@ -39,6 +39,11 @@
         .content {
             display: none;
         }
+        .selection-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
         select {
             background: black;
             color: #87CEFA; /* Vaaleansininen */
@@ -65,32 +70,27 @@
         <div id="content" class="content">
             <div>
                 <label for="laiva">Valitse laiva:</label>
-            </div>
-            <div>
                 <select id="laiva" onchange="updateDecks()">
                     <!-- Laivat täytetään JavaScriptillä -->
                 </select>
             </div>
             <br>
-            <div>
-                <label for="kansi">Valitse kansi:</label>
+            <div class="selection-container">
+                <div>
+                    <label for="kansi">Valitse kansi:</label>
+                    <select id="kansi">
+                        <!-- Kannet täytetään JavaScriptillä -->
+                    </select>
+                </div>
+                <div>
+                    <label for="kaide">Seisotko kaiteen päällä?</label>
+                    <select id="kaide">
+                        <option value="ei">Ei</option>
+                        <option value="kyllä">Kyllä</option>
+                    </select>
+                </div>
             </div>
-            <div>
-                <select id="kansi">
-                    <!-- Kannet täytetään JavaScriptillä -->
-                </select>
-            </div>
-            <br>
-            <div>
-                <label for="kaide">Seisotko kaiteen päällä?</label>
-            </div>
-            <div>
-                <select id="kaide">
-                    <option value="ei">Ei</option>
-                    <option value="kyllä">Kyllä</option>
-                </select>
-            </div>
-            <button onclick="laskeJaHyppaa()">Hyppää</button>
+            <button onclick="laskeJaHyppaa()">HYPPÄÄ</button>
         </div>
     </div>
     <script>
@@ -159,29 +159,29 @@
             window.location.href = `animation.html?speed=${speedKmH}&height=${jumpHeight}`;
         }
 
-        function typeWriter(text, i, fnCallback) {
+        function typeWriter(text, i, fnCallback, speed = 50) {
             if (i < text.length) {
                 const char = text.charAt(i);
                 const output = document.getElementById("output");
                 output.innerHTML += char;
                 i++;
                 setTimeout(function() {
-                    typeWriter(text, i, fnCallback)
-                }, 50);
-            } else if (typeof fnCallback == 'function') {
+                    typeWriter(text, i, fnCallback, speed);
+                }, speed);
+            } else if (typeof fnCallback === 'function') {
                 setTimeout(fnCallback, 700);
             }
         }
 
         function startTextAnimation() {
-            const text = `
-
-*** FREEFALL V 1.0 ***
+            const text = `*** FREEFALL V 1.0 ***
 READY.
 
 SYS 64738 : REM KILL SWITCH
 POKE 53280, 0
-
+`;
+            typeWriter(text, 0, () => {
+                const remainingText = `
 10 INPUT "VALITSE LAIVA", V
 20 INPUT "VALITSE KANSI", V
 30 INPUT "SEISOTKO KAITEELLA?", V
@@ -196,10 +196,22 @@ POKE 53280, 0
 
 3500 PRINT "You take the blue pill,"
 3510 PRINT "the story ends."
-3520 END`;
+3520 END
 
-            typeWriter(text, 0, () => {
-                document.getElementById("content").style.display = "block";
+Valitse laiva:
+(esim Viking MS Isabella)
+
+Valitse kansi:
+(esim Kansi 6)
+
+Seisotko kaiteen päällä?
+(esim Ei)
+
+HYPPÄÄ`;
+
+                typeWriter(remainingText, 0, () => {
+                    document.getElementById("content").style.display = "block";
+                }, 10); // Speed up for the remaining text
             });
         }
 
