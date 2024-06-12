@@ -43,86 +43,96 @@
         <div id="content" class="content">
             <h1>Freefall</h1>
             <div>
-                <label for="laiva">Valitse laiva:</label>
-                <select id="laiva" onchange="updateKannet()">
-                    <option value="Viking MS Isabella">Viking MS Isabella</option>
-                    <option value="Silja Serenade">Silja Serenade</option>
-                    <option value="Viking Grace">Viking Grace</option>
-                    <option value="Tallink Megastar">Tallink Megastar</option>
-                    <option value="Eckerö Line Finlandia">Eckerö Line Finlandia</option>
-                    <option value="Tallink Silja Europa">Tallink Silja Europa</option>
-                    <option value="Viking Amorella">Viking Amorella</option>
-                    <option value="Finnlines Star">Finnlines Star</option>
-                    <option value="Viking Gabriella">Viking Gabriella</option>
-                    <option value="Viking Rosella">Viking Rosella</option>
-                    <option value="Baltic Princess">Baltic Princess</option>
-                    <option value="Silja Symphony">Silja Symphony</option>
-                    <option value="SeaWind Line">SeaWind Line</option>
-                    <!-- Lisää lisää laivoja tarpeen mukaan -->
-                </select>
+                <label for="ship">Choose ship:</label>
             </div>
             <div>
-                <label for="kansi">Valitse kansi:</label>
-                <select id="kansi">
-                    <!-- Kannet täytetään JavaScriptillä -->
+                <select id="ship" onchange="updateDecks()">
+                    <!-- Ships will be populated by JavaScript -->
                 </select>
+            </div>
+            <br>
+            <div>
+                <label for="deck">Choose deck:</label>
             </div>
             <div>
-                <label for="kaide">Seisotko kaiteen päällä?</label>
-                <select id="kaide">
-                    <option value="ei">Ei</option>
-                    <option value="kyllä">Kyllä</option>
+                <select id="deck">
+                    <!-- Decks will be populated by JavaScript -->
                 </select>
             </div>
-            <button onclick="laskeKorkeus()">Hyppää</button>
+            <br>
+            <div>
+                <label for="rail">Standing on the rail?</label>
+            </div>
+            <div>
+                <select id="rail">
+                    <option value="no">No</option>
+                    <option value="yes">Yes</option>
+                </select>
+            </div>
+            <button onclick="calculateSpeed()">Jump</button>
             <div id="result" class="result"></div>
         </div>
     </div>
     <script>
-        const laivat = {
-            "Viking MS Isabella": { kannet: 11, vedenAlapuolella: 2, sallitutKannet: [6, 7, 8, 9, 10, 11] },
-            "Silja Serenade": { kannet: 13, vedenAlapuolella: 3, sallitutKannet: [8, 9, 10, 11, 12, 13] },
-            "Viking Grace": { kannet: 12, vedenAlapuolella: 2, sallitutKannet: [7, 8, 9, 10, 11, 12] },
-            "Tallink Megastar": { kannet: 10, vedenAlapuolella: 1, sallitutKannet: [5, 6, 7, 8, 9, 10] },
-            "Eckerö Line Finlandia": { kannet: 9, vedenAlapuolella: 2, sallitutKannet: [5, 6, 7, 8, 9] },
-            "Tallink Silja Europa": { kannet: 14, vedenAlapuolella: 3, sallitutKannet: [9, 10, 11, 12, 13, 14] },
-            "Viking Amorella": { kannet: 10, vedenAlapuolella: 2, sallitutKannet: [6, 7, 8, 9, 10] },
-            "Finnlines Star": { kannet: 12, vedenAlapuolella: 2, sallitutKannet: [7, 8, 9, 10, 11, 12] },
-            "Viking Gabriella": { kannet: 11, vedenAlapuolella: 2, sallitutKannet: [6, 7, 8, 9, 10, 11] },
-            "Viking Rosella": { kannet: 9, vedenAlapuolella: 1, sallitutKannet: [5, 6, 7, 8, 9] },
-            "Baltic Princess": { kannet: 12, vedenAlapuolella: 3, sallitutKannet: [8, 9, 10, 11, 12] },
-            "Silja Symphony": { kannet: 13, vedenAlapuolella: 3, sallitutKannet: [8, 9, 10, 11, 12, 13] },
-            "SeaWind Line": { kannet: 8, vedenAlapuolella: 2, sallitutKannet: [5, 6, 7, 8] },
-            // Lisää lisää laivoja tarpeen mukaan
-        };
+        const ships = {};
 
-        function updateKannet() {
-            const laivaValinta = document.getElementById('laiva').value;
-            const laiva = laivat[laivaValinta];
-            const kansiSelect = document.getElementById('kansi');
-            kansiSelect.innerHTML = '';
+        fetch('ships.csv')
+            .then(response => response.text())
+            .then(data => {
+                const lines = data.split('\n').slice(1);
+                lines.forEach(line => {
+                    const [ship, decks, belowWaterline, ...allowedDecks] = line.split(',');
+                    ships[ship] = {
+                        decks: parseInt(decks),
+                        belowWaterline: parseInt(belowWaterline),
+                        allowedDecks: allowedDecks.map(Number)
+                    };
+                });
+                populateShipOptions();
+            });
 
-            for (let i = 0; i < laiva.sallitutKannet.length; i++) {
+        function populateShipOptions() {
+            const shipSelect = document.getElementById('ship');
+            Object.keys(ships).forEach(ship => {
                 const option = document.createElement('option');
-                option.value = laiva.sallitutKannet[i];
-                option.text = `Kansi ${laiva.sallitutKannet[i]}`;
-                kansiSelect.appendChild(option);
+                option.value = ship;
+                option.text = ship;
+                shipSelect.appendChild(option);
+            });
+            updateDecks();
+        }
+
+        function updateDecks() {
+            const shipChoice = document.getElementById('ship').value;
+            const ship = ships[shipChoice];
+            const deckSelect = document.getElementById('deck');
+            deckSelect.innerHTML = '';
+
+            for (let i = 0; i < ship.allowedDecks.length; i++) {
+                const option = document.createElement('option');
+                option.value = ship.allowedDecks[i];
+                option.text = `Deck ${ship.allowedDecks[i]}`;
+                deckSelect.appendChild(option);
             }
         }
 
-        function laskeKorkeus() {
-            const laivaValinta = document.getElementById('laiva').value;
-            const valittuKansi = parseInt(document.getElementById('kansi').value);
-            const vedenAlapuolella = laivat[laivaValinta].vedenAlapuolella;
-            let hyppyKorkeus = valittuKansi - vedenAlapuolella;
+        function calculateSpeed() {
+            const shipChoice = document.getElementById('ship').value;
+            const selectedDeck = parseInt(document.getElementById('deck').value);
+            const belowWaterline = ships[shipChoice].belowWaterline;
+            let jumpHeight = (selectedDeck - belowWaterline) * 3; // Deck height estimated at 3 meters
 
-            const kaideValinta = document.getElementById('kaide').value;
-            if (kaideValinta === 'kyllä') {
-                hyppyKorkeus += 1; // Lisää yksi metri jos seisotaan kaiteen päällä
+            const railChoice = document.getElementById('rail').value;
+            if (railChoice === 'yes') {
+                jumpHeight += 1; // Add one meter if standing on the rail
             }
 
+            const g = 9.81; // Acceleration due to gravity in m/s^2
+            const speed = Math.sqrt(2 * g * jumpHeight); // Calculate speed in m/s
+            const speedKmH = (speed * 3.6).toFixed(2); // Convert speed to km/h
+
             const resultDiv = document.getElementById('result');
-            resultDiv.textContent = `Hyppykorkeus on ${hyppyKorkeus} kerrosta merenpintaan.`;
+            resultDiv.textContent = `Impact speed is ${speedKmH} km/h.`;
         }
 
         function typeWriter(text, i, fnCallback) {
@@ -144,9 +154,6 @@
         document.addEventListener("DOMContentLoaded", function() {
             startTextAnimation();
         });
-
-        // Päivitä kannet alussa valitulle laivalle
-        updateKannet();
     </script>
 </body>
 </html>
