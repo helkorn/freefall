@@ -94,11 +94,12 @@
             bottom: 10px;
             left: 10px;
             font-size: 1.5em;
-            color: gray;
+            color: darkgray;
             opacity: 0;
         }
         @keyframes fall {
             0% { top: 0; }
+            10% { top: -20px; } /* Simulate jump upwards */
             100% { top: calc(100% - 50px - 66px); }
         }
         @keyframes spin {
@@ -109,6 +110,21 @@
             to {
                 opacity: 1;
             }
+        }
+        @keyframes splash {
+            0% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+        .splash {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            top: calc(100% - 200px);
+            left: calc(50% - 50px);
+            background-image: url('splash.svg');
+            background-size: contain;
+            background-repeat: no-repeat;
+            opacity: 0;
         }
     </style>
 </head>
@@ -143,6 +159,7 @@
         <div class="character" id="character"></div>
         <div class="water"></div>
         <div class="speed-display" id="speedDisplay">0 km/h</div>
+        <div class="splash" id="splash"></div>
     </div>
     <script>
         const ships = {};
@@ -213,6 +230,7 @@
             const character = document.getElementById('character');
             const speedDisplay = document.getElementById('speedDisplay');
             const jumpButton = document.getElementById('jumpButton');
+            const splash = document.getElementById('splash');
 
             jumpButton.style.display = 'none';
 
@@ -223,8 +241,11 @@
             setTimeout(() => {
                 speedDisplay.textContent = `${speedKmH} km/h`;
                 speedDisplay.style.opacity = '1';
-                jumpButton.textContent = 'HYPPÄÄ';
-                jumpButton.style.display = 'block';
+                splash.style.animation = 'splash 500ms ease-in-out';
+                setTimeout(() => {
+                    splash.style.opacity = '0';
+                    restart();
+                }, 500);
             }, 3000);
         }
 
@@ -236,6 +257,8 @@
             const jumpButton = document.getElementById('jumpButton');
             jumpButton.style.display = 'block';
             jumpButton.textContent = 'HYPPÄÄ';
+            const splash = document.getElementById('splash');
+            splash.style.animation = '';
         }
 
         function typeWriter(text, i, fnCallback, speed = 50) {
