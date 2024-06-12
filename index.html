@@ -133,7 +133,7 @@
                 option.value = ship.allowedDecks[i];
                 option.text = `Kansi ${ship.allowedDecks[i]}`;
                 deckSelect.appendChild(option);
-            }
+            });
         }
 
         function calculateSpeed(height) {
@@ -182,18 +182,20 @@
         }
 
         function startTextAnimation() {
-            const text = `*** FREEFALL V 1.0 ***
+            const text = `
+
+*** FREEFALL V 1.0 ***
 READY.
 
 SYS 64738 : REM KILL SWITCH
 POKE 53280, 0
-READY.
 
-10 INPUT "VALITSE LAIVA, V" [laiva]
-20 INPUT "VALITSE KANSI, V" [kansi]
-30 INPUT "SEISOTKO KAITEELLA?, V" [kaide]
+10 INPUT "VALITSE LAIVA", V
+20 INPUT "VALITSE KANSI", V
+30 INPUT "SEISOTKO KAITEELLA?", V 
+
 40 IF V = 1 THEN GOTO 10
-50 IF V = 2 THEN GOTO 3000
+50 IF V = 2 THEN GOTO 3010
 60 IF V <> 1 AND V <> 2 THEN GOSUB 3500
 70 END
 
@@ -213,3 +215,4 @@ READY.
     </script>
 </body>
 </html>
+
