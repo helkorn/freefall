@@ -17,8 +17,16 @@
             padding: 0;
             overflow: hidden;
             position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             height: 100vh;
+            width: 100vw;
+        }
+        .container {
+            position: relative;
             width: 600px;
+            height: 100%;
         }
         .line {
             position: absolute;
@@ -31,9 +39,9 @@
         .character {
             position: absolute;
             top: 190px;
-            left: 275px;
-            width: 20px;
-            height: 22px;
+            left: 270px;
+            width: 60px;
+            height: 66px;
             background-image: url('sprites/monkey_sprite_1.png');
             background-size: cover;
             animation: fall 6s cubic-bezier(0.25, 0.1, 0.25, 1), spin 1s steps(6) infinite;
@@ -49,15 +57,15 @@
         .splash {
             position: absolute;
             display: none;
-            width: 100px;
-            height: 100px;
+            width: 33px; /* 3 kertaa pienempi */
+            height: 33px; /* 3 kertaa pienempi */
             bottom: 50px;
             left: 50%;
             transform: translateX(-50%);
         }
         @keyframes fall {
             0% { top: 190px; }
-            100% { top: calc(100vh - 50px - 22px); }
+            100% { top: calc(100vh - 50px - 66px); }
         }
         @keyframes spin {
             0% { background-image: url('sprites/monkey_sprite_1.png'); }
@@ -70,11 +78,10 @@
         }
         .speed-display {
             position: absolute;
-            bottom: 60px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 1em;
-            text-align: center;
+            top: 10px;
+            right: 10px;
+            font-size: 1.5em;
+            color: gray;
             opacity: 0;
             animation: showSpeed 1s 6s forwards;
         }
@@ -87,7 +94,8 @@
             position: absolute;
             top: 10px;
             right: 10px;
-            font-size: 2em;
+            font-size: 1.5em;
+            color: gray;
             animation: blink 1s step-start 0s infinite;
         }
         @keyframes blink {
@@ -96,14 +104,15 @@
     </style>
 </head>
 <body>
-    <div class="line"></div>
-    <div class="character" id="character"></div>
-    <div class="water"></div>
-    <div class="splash" id="splash">
-        <img src="splash.svg" alt="Splash">
+    <div class="container">
+        <div class="line"></div>
+        <div class="character" id="character"></div>
+        <div class="water"></div>
+        <div class="splash" id="splash">
+            <img src="splash.svg" alt="Splash">
+        </div>
+        <div class="replay-marker" id="replayMarker">R</div>
     </div>
-    <div class="speed-display" id="speedDisplay"></div>
-    <div class="replay-marker">R</div>
     <script>
         function getQueryParams() {
             const params = {};
@@ -117,14 +126,13 @@
 
         document.addEventListener("DOMContentLoaded", function() {
             const params = getQueryParams();
-            const speedDisplay = document.getElementById('speedDisplay');
+            const replayMarker = document.getElementById('replayMarker');
             const splash = document.getElementById('splash');
-            
-            speedDisplay.textContent = `splash at ${params.speed} km/h`;
             
             setTimeout(() => {
                 splash.style.display = 'block';
-            }, 6000); // Asetetaan näkyviin 6 sekunnin kuluttua, kun hahmo on pudonnut veteen
+                replayMarker.textContent = `${params.speed} km/h`;
+            }, 6000); // Näytetään 6 sekunnin kuluttua, kun hahmo on pudonnut veteen
         });
     </script>
 </body>
