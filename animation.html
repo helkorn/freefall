@@ -96,10 +96,19 @@
             right: 10px;
             font-size: 1.5em;
             color: gray;
-            animation: blink 1s step-start 0s infinite;
+            opacity: 0;
+            animation: showSpeed 1s 6s forwards;
         }
-        @keyframes blink {
-            50% { opacity: 0; }
+        .replay-link {
+            position: absolute;
+            top: 40px;
+            right: 10px;
+            font-size: 1em;
+            color: gray;
+            cursor: pointer;
+            text-decoration: underline;
+            opacity: 0;
+            animation: showSpeed 1s 6s forwards;
         }
     </style>
 </head>
@@ -112,6 +121,8 @@
             <img src="splash.svg" alt="Splash">
         </div>
         <div class="replay-marker" id="replayMarker">R</div>
+        <div class="speed-display" id="speedDisplay"></div>
+        <div class="replay-link" id="replayLink" onclick="restart()">Hyppää uudelleen</div>
     </div>
     <script>
         function getQueryParams() {
@@ -124,16 +135,26 @@
             return params;
         }
 
+        function restart() {
+            window.location.href = 'index.html'; // Palaa etusivulle
+        }
+
         document.addEventListener("DOMContentLoaded", function() {
             const params = getQueryParams();
             const replayMarker = document.getElementById('replayMarker');
             const splash = document.getElementById('splash');
+            const speedDisplay = document.getElementById('speedDisplay');
+            const replayLink = document.getElementById('replayLink');
             
             setTimeout(() => {
                 splash.style.display = 'block';
                 replayMarker.textContent = `${params.speed} km/h`;
+                replayMarker.style.opacity = '1';
+                speedDisplay.style.opacity = '1';
+                replayLink.style.opacity = '1';
             }, 6000); // Näytetään 6 sekunnin kuluttua, kun hahmo on pudonnut veteen
         });
     </script>
 </body>
 </html>
+
