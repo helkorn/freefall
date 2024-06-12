@@ -97,16 +97,6 @@
             color: gray;
             opacity: 0;
         }
-        .replay-link {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            font-size: 1em;
-            color: gray;
-            cursor: pointer;
-            text-decoration: underline;
-            display: none;
-        }
         @keyframes fall {
             0% { top: 0; }
             100% { top: calc(100% - 50px - 66px); }
@@ -127,7 +117,7 @@
         <div id="output"></div>
         <div id="content" class="content">
             <div>
-                <label for="laiva">Valitse laiva:</label>
+                <label for="laiva">Laiva:</label>
                 <select id="laiva" onchange="updateDecks()">
                     <!-- Laivat täytetään JavaScriptillä -->
                 </select>
@@ -142,7 +132,7 @@
                 </div>
                 <br><br><br><br><br>
                 <div>
-                    <label for="kaide">Seisotko kaiteen päällä?</label>
+                    <label for="kaide">Et kai seiso kaiteella?</label>
                     <select id="kaide">
                         <option value="ei">Ei</option>
                         <option value="kyllä">Kyllä</option>
@@ -155,7 +145,6 @@
         <div class="character" id="character"></div>
         <div class="water"></div>
         <div class="speed-display" id="speedDisplay">0 km/h</div>
-        <button id="replayLink" onclick="restart()">HYPPÄÄ UUDELLEEN</button>
     </div>
     <script>
         const ships = {};
@@ -226,11 +215,8 @@
             const character = document.getElementById('character');
             const speedDisplay = document.getElementById('speedDisplay');
             const jumpButton = document.getElementById('jumpButton');
-            const replayLink = document.getElementById('replayLink');
 
             jumpButton.style.display = 'none';
-            replayLink.style.display = 'none';
-            speedDisplay.style.opacity = '0';
 
             const spinDuration = (Math.random() * 2 + 1) * 1000; // Random spin duration between 1 and 3 seconds
 
@@ -250,7 +236,8 @@
                     requestAnimationFrame(updateSpeed);
                 } else {
                     speedDisplay.style.opacity = '1';
-                    replayLink.style.display = 'block';
+                    speedDisplay.style.bottom = '10px';
+                    speedDisplay.style.left = '10px';
                     jumpButton.textContent = 'HYPPÄÄ UUDELLEEN';
                     jumpButton.style.display = 'block';
                 }
@@ -264,8 +251,6 @@
             speedDisplay.style.opacity = '0';
             const character = document.getElementById('character');
             character.style.animation = '';
-            const replayLink = document.getElementById('replayLink');
-            replayLink.style.display = 'none';
             const jumpButton = document.getElementById('jumpButton');
             jumpButton.style.display = 'block';
             jumpButton.textContent = 'HYPPÄÄ';
@@ -288,6 +273,12 @@
         function startTextAnimation() {
             const text = `*** FREEFALL V 1.0 ***
 READY.
+
+
+
+
+
+
 `;
             typeWriter(text, 0, () => {
                 document.getElementById("content").style.display = "block";
@@ -300,3 +291,4 @@ READY.
     </script>
 </body>
 </html>
+
