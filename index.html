@@ -274,33 +274,9 @@
         function startTextAnimation() {
             const text = `*** FREEFALL V 1.0 ***
 READY.
-
-SYS 64738 : REM KILL SWITCH
-POKE 53280, 0
 `;
             typeWriter(text, 0, () => {
-                const remainingText = `
-10 INPUT "VALITSE LAIVA", V
-20 INPUT "VALITSE KANSI", V
-30 INPUT "SEISOTKO KAITEELLA?", V
-
-40 IF V = 1 THEN GOTO 10
-50 IF V = 2 THEN GOTO 3010
-60 IF V <> 1 AND V <> 2 THEN GOSUB 3500
-70 END
-
-3010 LOAD "FREEFALL",8,1
-3020 RUN
-
-3500 PRINT "You take the blue pill,"
-3510 PRINT "the story ends."
-3520 END
-
-`;
-
-                typeWriter(remainingText, 0, () => {
-                    document.getElementById("content").style.display = "block";
-                }, 10); // Speed up for the remaining text
+                document.getElementById("content").style.display = "block";
             });
         }
 
