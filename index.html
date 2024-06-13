@@ -94,7 +94,7 @@
             bottom: 10px;
             left: 10px;
             font-size: 1.5em;
-            color: darkgray;
+            color: #000000; /* Change to darker color */
         }
         @keyframes fall {
             0% { top: 0; right: 0; }
@@ -243,7 +243,6 @@
                 splash.style.animation = 'splash 500ms ease-in-out';
                 setTimeout(() => {
                     splash.style.opacity = '0';
-                    resetAfterJump();
                 }, 500);
             }, 3000);
         }
@@ -295,5 +294,4 @@ READY.
     </script>
 </body>
 </html>
-
 
