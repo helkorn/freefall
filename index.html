@@ -94,7 +94,9 @@
             bottom: 10px;
             left: 10px;
             font-size: 1.5em;
-            color: #000000; /* Change to darker color */
+            color: darkgray;
+            opacity: 0; /* Initially hidden */
+            transition: opacity 0.5s, color 0.5s;
         }
         @keyframes fall {
             0% { top: 0; right: 0; }
@@ -240,6 +242,7 @@
             setTimeout(() => {
                 speedDisplay.textContent = `${speedKmH} km/h`;
                 speedDisplay.style.opacity = '1';
+                speedDisplay.style.color = 'black'; // Set to darker color
                 splash.style.animation = 'splash 500ms ease-in-out';
                 setTimeout(() => {
                     splash.style.opacity = '0';
@@ -247,7 +250,7 @@
             }, 3000);
         }
 
-        function resetAfterJump() {
+        function restart() {
             const character = document.getElementById('character');
             character.style.animation = '';
             const jumpButton = document.getElementById('jumpButton');
@@ -255,8 +258,6 @@
             jumpButton.textContent = 'HYPPÄÄ';
             const splash = document.getElementById('splash');
             splash.style.animation = '';
-            const speedDisplay = document.getElementById('speedDisplay');
-            speedDisplay.style.opacity = '0';
         }
 
         function typeWriter(text, i, fnCallback, speed = 50) {
