@@ -243,11 +243,12 @@
                 splash.style.animation = 'splash 500ms ease-in-out';
                 setTimeout(() => {
                     splash.style.opacity = '0';
+                    resetAfterJump();
                 }, 500);
             }, 3000);
         }
 
-        function restart() {
+        function resetAfterJump() {
             const character = document.getElementById('character');
             character.style.animation = '';
             const jumpButton = document.getElementById('jumpButton');
@@ -255,6 +256,8 @@
             jumpButton.textContent = 'HYPPÄÄ';
             const splash = document.getElementById('splash');
             splash.style.animation = '';
+            const speedDisplay = document.getElementById('speedDisplay');
+            speedDisplay.style.opacity = '0';
         }
 
         function typeWriter(text, i, fnCallback, speed = 50) {
@@ -292,4 +295,3 @@ READY.
     </script>
 </body>
 </html>
-
