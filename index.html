@@ -95,8 +95,6 @@
             left: 10px;
             font-size: 1.5em;
             color: darkgray;
-            opacity: 0; /* Initially hidden */
-            transition: opacity 0.5s, color 0.5s;
         }
         @keyframes fall {
             0% { top: 0; right: 0; }
@@ -242,7 +240,6 @@
             setTimeout(() => {
                 speedDisplay.textContent = `${speedKmH} km/h`;
                 speedDisplay.style.opacity = '1';
-                speedDisplay.style.color = 'black'; // Set to darker color
                 splash.style.animation = 'splash 500ms ease-in-out';
                 setTimeout(() => {
                     splash.style.opacity = '0';
@@ -295,4 +292,5 @@ READY.
     </script>
 </body>
 </html>
+
 
