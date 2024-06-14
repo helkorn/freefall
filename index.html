@@ -148,7 +148,7 @@
                     <label for="kaide">Seisotko kaiteella?</label>
                     <select id="kaide">
                         <option value="ei">Ei</option>
-                        <option value="kyllä" selected>Kyllä</option>
+                        <option value="kyllä">Kyllä</option>
                     </select>
                 </div>
             </div>
@@ -186,7 +186,6 @@
                 option.text = ship;
                 shipSelect.appendChild(option);
             });
-            shipSelect.value = Object.keys(ships)[0]; // Esivalinta
             updateDecks();
         }
 
@@ -202,7 +201,6 @@
                 option.text = `Kansi ${ship.allowedDecks[i]}`;
                 deckSelect.appendChild(option);
             }
-            deckSelect.value = ship.allowedDecks[Math.min(8, ship.allowedDecks.length - 1)]; // Esivalinta yhdeksäs kansi, jos olemassa
         }
 
         function calculateSpeed(height) {
@@ -235,24 +233,13 @@
 
             jumpButton.style.display = 'none';
 
-            // Satunnainen pyörimisen kesto
-            const spinDuration = (Math.random() > 0.5 ? (Math.random() * 2 + 1) : 0) * 1000; // Random spin duration between 1 and 3 seconds, or no spin
+            const spinDuration = (Math.random() * 2 + 1) * 1000; // Random spin duration between 1 and 3 seconds
 
             character.style.animation = `fall 3000ms ease-in, spin ${spinDuration}ms linear`;
 
-            // Näytä nopeus heti "HYPPÄÄ"-painikkeen alapuolella
-            speedDisplay.textContent = `${speedKmH} km/h`;
-            speedDisplay.style.opacity = '1';
-
-            // Vaihda sprite-kuvaa jatkuvasti
-            let spriteIndex = 1;
-            const spriteInterval = setInterval(() => {
-                spriteIndex = (spriteIndex % 6) + 1;
-                character.style.backgroundImage = `url('sprites/monkey_sprite_${spriteIndex}.png')`;
-            }, 200); // Vaihda kuvaa 200ms välein
-
             setTimeout(() => {
-                clearInterval(spriteInterval); // Lopeta sprite-kuvien vaihtaminen
+                speedDisplay.textContent = `${speedKmH} km/h`;
+                speedDisplay.style.opacity = '1';
                 splash.style.animation = 'splash 500ms ease-in-out';
                 setTimeout(() => {
                     splash.style.opacity = '0';
@@ -308,3 +295,5 @@ READY.
     </script>
 </body>
 </html>
+
+
