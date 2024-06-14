@@ -202,7 +202,7 @@
                 option.text = `Kansi ${ship.allowedDecks[i]}`;
                 deckSelect.appendChild(option);
             }
-            deckSelect.value = ship.allowedDecks[8]; // Esivalinta yhdeksäs kansi
+            deckSelect.value = ship.allowedDecks[Math.min(8, ship.allowedDecks.length - 1)]; // Esivalinta yhdeksäs kansi, jos olemassa
         }
 
         function calculateSpeed(height) {
@@ -244,7 +244,15 @@
             speedDisplay.textContent = `${speedKmH} km/h`;
             speedDisplay.style.opacity = '1';
 
+            // Vaihda sprite-kuvaa jatkuvasti
+            let spriteIndex = 1;
+            const spriteInterval = setInterval(() => {
+                spriteIndex = (spriteIndex % 6) + 1;
+                character.style.backgroundImage = `url('sprites/monkey_sprite_${spriteIndex}.png')`;
+            }, 200); // Vaihda kuvaa 200ms välein
+
             setTimeout(() => {
+                clearInterval(spriteInterval); // Lopeta sprite-kuvien vaihtaminen
                 splash.style.animation = 'splash 500ms ease-in-out';
                 setTimeout(() => {
                     splash.style.opacity = '0';
@@ -300,4 +308,3 @@ READY.
     </script>
 </body>
 </html>
-
