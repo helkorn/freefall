@@ -148,7 +148,7 @@
                     <label for="kaide">Seisotko kaiteella?</label>
                     <select id="kaide">
                         <option value="ei">Ei</option>
-                        <option value="kyllä">Kyllä</option>
+                        <option value="kyllä" selected>Kyllä</option>
                     </select>
                 </div>
             </div>
@@ -186,6 +186,7 @@
                 option.text = ship;
                 shipSelect.appendChild(option);
             });
+            shipSelect.value = Object.keys(ships)[0]; // Esivalinta
             updateDecks();
         }
 
@@ -201,6 +202,7 @@
                 option.text = `Kansi ${ship.allowedDecks[i]}`;
                 deckSelect.appendChild(option);
             }
+            deckSelect.value = ship.allowedDecks[8]; // Esivalinta yhdeksäs kansi
         }
 
         function calculateSpeed(height) {
@@ -298,3 +300,4 @@ READY.
     </script>
 </body>
 </html>
+
