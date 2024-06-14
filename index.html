@@ -80,6 +80,7 @@
             height: 66px;
             background-image: url('sprites/monkey_sprite_1.png');
             background-size: cover;
+            animation: turn 2000ms steps(6) infinite;
         }
         .water {
             position: absolute;
@@ -231,16 +232,7 @@
 
             const speedKmH = calculateSpeed(jumpHeight);
 
-            startTurnAnimation(speedKmH);
-        }
-
-        function startTurnAnimation(speedKmH) {
-            const character = document.getElementById('character');
-            character.style.animation = 'turn 1000ms steps(6)';
-
-            setTimeout(() => {
-                startJumpAnimation(speedKmH);
-            }, 1000);
+            startJumpAnimation(speedKmH);
         }
 
         function startJumpAnimation(speedKmH) {
@@ -268,7 +260,7 @@
 
         function resetAfterJump() {
             const character = document.getElementById('character');
-            character.style.animation = '';
+            character.style.animation = 'turn 2000ms steps(6) infinite'; // Restart turning animation
             const jumpButton = document.getElementById('jumpButton');
             jumpButton.style.display = 'block';
             jumpButton.textContent = 'HYPPÄÄ';
