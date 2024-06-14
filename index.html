@@ -114,6 +114,15 @@
             0% { opacity: 1; }
             100% { opacity: 0; }
         }
+        @keyframes turn {
+            0% { background-image: url('sprites/monkey_sprite_1.png'); }
+            16% { background-image: url('sprites/monkey_sprite_2.png'); }
+            32% { background-image: url('sprites/monkey_sprite_3.png'); }
+            50% { background-image: url('sprites/monkey_sprite_4.png'); }
+            66% { background-image: url('sprites/monkey_sprite_5.png'); }
+            83% { background-image: url('sprites/monkey_sprite_6.png'); }
+            100% { background-image: url('sprites/monkey_sprite_1.png'); }
+        }
         .splash {
             position: absolute;
             width: 100px;
@@ -163,7 +172,6 @@
     <script>
         const ships = {};
 
-        // Ladataan laivalista CSV-tiedostosta
         fetch('ships.csv')
             .then(response => response.text())
             .then(data => {
@@ -179,7 +187,6 @@
                 populateShipOptions();
             });
 
-        // Täytetään laivavalitsin
         function populateShipOptions() {
             const shipSelect = document.getElementById('laiva');
             Object.keys(ships).forEach(ship => {
@@ -191,7 +198,6 @@
             updateDecks();
         }
 
-        // Päivitetään kannet valitun laivan mukaan
         function updateDecks() {
             const shipChoice = document.getElementById('laiva').value;
             const ship = ships[shipChoice];
@@ -206,14 +212,12 @@
             }
         }
 
-        // Lasketaan hyppynopeus
         function calculateSpeed(height) {
             const g = 9.81; // Painovoiman kiihtyvyys m/s^2
             const speed = Math.sqrt(2 * g * height); // Lasketaan nopeus m/s
             return (speed * 3.6).toFixed(2); // Muutetaan nopeus km/h
         }
 
-        // Aloitetaan hyppy ja lasketaan korkeus
         function laskeJaHyppaa() {
             const shipChoice = document.getElementById('laiva').value;
             const selectedDeck = parseInt(document.getElementById('kansi').value);
@@ -227,10 +231,18 @@
 
             const speedKmH = calculateSpeed(jumpHeight);
 
-            startJumpAnimation(speedKmH);
+            startTurnAnimation(speedKmH);
         }
 
-        // Aloitetaan hyppyanimaatio
+        function startTurnAnimation(speedKmH) {
+            const character = document.getElementById('character');
+            character.style.animation = 'turn 1000ms steps(6)';
+
+            setTimeout(() => {
+                startJumpAnimation(speedKmH);
+            }, 1000);
+        }
+
         function startJumpAnimation(speedKmH) {
             const character = document.getElementById('character');
             const speedDisplay = document.getElementById('speedDisplay');
@@ -239,8 +251,7 @@
 
             jumpButton.style.display = 'none';
 
-            // Arvotaan satunnainen pyörimisaika välillä 1-3 sekuntia
-            const spinDuration = (Math.random() * 2 + 1) * 1000; 
+            const spinDuration = (Math.random() * 2 + 1) * 1000; // Random spin duration between 1 and 3 seconds
 
             character.style.animation = `fall 3000ms ease-in, spin ${spinDuration}ms linear`;
 
@@ -250,12 +261,11 @@
                 splash.style.animation = 'splash 500ms ease-in-out';
                 setTimeout(() => {
                     splash.style.opacity = '0';
-                    resetAfterJump(); // Nollataan animaatio hypyn jälkeen
+                    resetAfterJump(); // Reset after the splash
                 }, 500);
             }, 3000);
         }
 
-        // Palautetaan animaation jälkeen
         function resetAfterJump() {
             const character = document.getElementById('character');
             character.style.animation = '';
@@ -268,7 +278,6 @@
             speedDisplay.style.opacity = '0';
         }
 
-        // Kirjoitetaan teksti ruudulle kirjain kirjaimelta
         function typeWriter(text, i, fnCallback, speed = 50) {
             if (i < text.length) {
                 const char = text.charAt(i);
@@ -283,7 +292,6 @@
             }
         }
 
-        // Aloitetaan tekstianimaatio
         function startTextAnimation() {
             const text = `*** FREEFALL V 1.0 ***
 READY.
@@ -299,7 +307,6 @@ READY.
             });
         }
 
-        // Odotetaan, että DOM on ladattu ja aloitetaan tekstianimaatio
         document.addEventListener("DOMContentLoaded", function() {
             startTextAnimation();
         });
