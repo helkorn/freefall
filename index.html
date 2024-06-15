@@ -254,7 +254,7 @@
                 setTimeout(() => {
                     splash.style.opacity = '0';
                     resetAfterJump(); // Reset after the splash
-                }, 500);
+                }, 5000); // Pidetään nopeusnäyttö näkyvissä 5 sekuntia
             }, 3000);
         }
 
@@ -267,7 +267,11 @@
             const splash = document.getElementById('splash');
             splash.style.animation = '';
             const speedDisplay = document.getElementById('speedDisplay');
-            speedDisplay.style.opacity = '0';
+            
+            // Viivästetään nopeusnäytön piilottamista
+            setTimeout(() => {
+                speedDisplay.style.opacity = '0';
+            }, 5000); // Näytetään nopeusnäyttö 5 sekuntia ennen piilottamista
         }
 
         function typeWriter(text, i, fnCallback, speed = 50) {
