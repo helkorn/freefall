@@ -95,21 +95,19 @@
             bottom: 10px;
             left: 10px;
             font-size: 1.5em;
-            color: #444444; /* Change to darker color */
+            color: #444444;
         }
         @keyframes fall {
             0% { top: 0; right: 0; }
-            10% { top: -20px; right: 10px; } /* Simulate jump upwards and move slightly left */
-            100% { top: calc(100% - 50px - 66px); right: 50px; } /* Final position slightly left */
+            10% { top: -20px; right: 10px; }
+            100% { top: calc(100% - 50px - 66px); right: 50px; }
         }
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
         @keyframes showSpeed {
-            to {
-                opacity: 1;
-            }
+            to { opacity: 1; }
         }
         @keyframes splash {
             0% { opacity: 1; }
@@ -135,15 +133,21 @@
             background-repeat: no-repeat;
             opacity: 0;
         }
-        .extreme-link {
+        .extreme-button {
             display: none;
-            color: #000000;
-            text-decoration: none;
-            font-size: 12px;
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background: black;
+            color: #87CEFA;
+            border: 1px solid #87CEFA;
+            padding: 5px 10px;
             font-family: 'C64', monospace;
-            opacity: 0.2;
+            font-size: 16px;
+            cursor: pointer;
+            opacity: 0.6;
         }
-        .extreme-link:hover {
+        .extreme-button:hover {
             opacity: 1;
         }
     </style>
@@ -165,16 +169,9 @@
                         <!-- Kannet täytetään JavaScriptillä -->
                     </select>
                 </div>
-                <div>
-                    <label for="kaide">Seisotko kaiteella?</label>
-                    <select id="kaide">
-                        <option value="ei">Ei</option>
-                        <option value="kyllä">Kyllä</option>
-                    </select>
-                </div>
+                <button onclick="laskeJaHyppaa()" id="jumpButton">HYPPÄÄ</button>
+                <button onclick="goToExtremeMode()" id="extremeButton" class="extreme-button">EXTREME MODE</button>
             </div>
-            <button onclick="laskeJaHyppaa()" id="jumpButton">HYPPÄÄ</button>
-            <a href="extreme.html" class="extreme-link" id="extremeLink">EXTREME MODE</a>
         </div>
         <div class="line"></div>
         <div class="character" id="character"></div>
@@ -258,10 +255,9 @@
             const speedDisplay = document.getElementById('speedDisplay');
             const jumpButton = document.getElementById('jumpButton');
             const splash = document.getElementById('splash');
-            const extremeLink = document.getElementById('extremeLink');
+            const extremeButton = document.getElementById('extremeButton');
 
             jumpButton.style.display = 'none';
-            extremeLink.style.display = 'block';
 
             const spinDuration = (Math.random() * 2 + 1) * 1000; // Random spin duration between 1 and 3 seconds
 
@@ -270,23 +266,27 @@
             setTimeout(() => {
                 speedDisplay.textContent = `${speedKmH} km/h`;
                 speedDisplay.style.opacity = '1';
-                splash.style.animation = 'splash 1000ms ease-in-out'; // Extended splash duration
+                splash.style.animation = 'splash 1000ms ease-in-out';
                 setTimeout(() => {
                     splash.style.opacity = '0';
-                    resetAfterJump(); // Reset after the splash
-                }, 1000); // Extended splash duration
+                    resetAfterJump();
+                    extremeButton.style.display = 'block';
+                }, 1000);
             }, 3000);
         }
 
         function resetAfterJump() {
             const character = document.getElementById('character');
-            character.style.animation = 'turn 2000ms steps(6) infinite'; // Restart turning animation
+            character.style.animation = 'turn 2000ms steps(6) infinite';
             const jumpButton = document.getElementById('jumpButton');
             jumpButton.style.display = 'block';
             jumpButton.textContent = 'HYPPÄÄ';
             const splash = document.getElementById('splash');
             splash.style.animation = '';
-            // Ei piiloteta nopeusnäyttöä
+        }
+
+        function goToExtremeMode() {
+            window.location.href = "extreme.html";
         }
 
         function typeWriter(text, i, fnCallback, speed = 50) {
