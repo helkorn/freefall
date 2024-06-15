@@ -211,6 +211,12 @@
                 option.text = `Kansi ${ship.allowedDecks[i]}`;
                 deckSelect.appendChild(option);
             }
+
+            // Set default values
+            if (shipChoice === "Isabella") {
+                document.getElementById('kansi').value = '9';
+                document.getElementById('kaide').value = 'kyllä';
+            }
         }
 
         function calculateSpeed(height) {
@@ -250,11 +256,11 @@
             setTimeout(() => {
                 speedDisplay.textContent = `${speedKmH} km/h`;
                 speedDisplay.style.opacity = '1';
-                splash.style.animation = 'splash 500ms ease-in-out';
+                splash.style.animation = 'splash 1000ms ease-in-out'; // Extended splash duration
                 setTimeout(() => {
                     splash.style.opacity = '0';
                     resetAfterJump(); // Reset after the splash
-                }, 500);
+                }, 1000); // Extended splash duration
             }, 3000);
         }
 
