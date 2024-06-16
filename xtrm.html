@@ -101,12 +101,15 @@
             background-repeat: repeat-y; /* Repeats the image vertically */
         }
         .water {
+            display: none; /* Piilotettu vesielementti */
+        }
+        .street {
             position: absolute;
             bottom: 0;
             left: 0;
             width: 100%;
             height: 100px;
-            background: url('water_texture.png') repeat-x;
+            background: url('street.png') repeat-x;
             filter: grayscale(100%);
         }
         .speed-display {
@@ -114,7 +117,7 @@
             bottom: 10px;
             left: 10px;
             font-size: 1.5em;
-            color: #FF0000;
+            color: #FFFFFF; /* Muutettu fontin väri valkoiseksi */
         }
         @keyframes fall {
             0% { top: 0; right: 60px; } /* Adjusted starting position */
@@ -149,7 +152,7 @@
             height: 100px;
             top: calc(100% - 200px);
             left: calc(50% - 50px);
-            background-image: url('splash.svg');
+            background-image: url('autch.svg'); /* Muutettu kuvan nimeksi autch.svg */
             background-size: contain;
             background-repeat: no-repeat;
             opacity: 0;
@@ -162,7 +165,7 @@
         <div id="output"></div>
         <div id="content" class="content">
             <div>
-                <label for="building">Valitse rakennus:</label>
+                <label for="building">Rakennus:</label> <!-- Muutettu tekstiksi Rakennus: -->
                 <select id="building" onchange="updateLevels()">
                     <!-- Rakennukset täytetään JavaScriptillä -->
                 </select>
@@ -180,7 +183,7 @@
         <div class="skyscraper"></div> <!-- Added skyscraper element -->
         <div class="line"></div>
         <div class="character" id="character"></div>
-        <div class="water"></div>
+        <div class="street"></div> <!-- Lisätty katu elementti -->
         <div class="speed-display" id="speedDisplay">0 km/h</div>
         <div class="splash" id="splash"></div>
     </div>
@@ -234,7 +237,7 @@
         function calculateSpeed(height) {
             const g = 9.81; // Painovoiman kiihtyvyys m/s^2
             const speed = Math.sqrt(2 * g * height); // Lasketaan nopeus m/s
-            return (speed * 3.6).toFixed(2); // Muutetaan nopeus km/h
+            return Math.min((speed * 3.6), 200).toFixed(2); // Muutetaan nopeus km/h ja rajoitetaan 200 km/h
         }
 
         function laskeJaHyppaa() {
@@ -302,15 +305,8 @@
         }
 
         function startTextAnimation() {
-            const text = `*** FREEFALL V 1.0 ***
-READY.
-
-
-
-
-
-
-`;
+            const text = `FREEFALL NO 2MORO***
+`; // Muutettu teksti
             typeWriter(text, 0, () => {
                 document.getElementById("content").style.display = "block";
             });
