@@ -127,7 +127,7 @@
         @keyframes fall {
             0% { top: 0; right: 60px; } /* Adjusted starting position */
             10% { top: -20px; right: 70px; } /* Adjusted to move slightly left */
-            100% { top: calc(100% - 50px - 66px); right: 110px; } /* Adjusted final position */
+            100% { top: calc(100% - 50px - 66px); right: calc(50% - 30px); } /* Adjusted final position */
         }
         @keyframes spin {
             0% { transform: rotate(0deg); }
@@ -151,13 +151,13 @@
             83% { background-image: url('sprites/monkey_sprite_6.png'); }
             100% { background-image: url('sprites/monkey_sprite_1.png'); }
         }
-        .splash {
+        .skeleton {
             position: absolute;
             width: 100px;
             height: 100px;
             top: calc(100% - 200px);
             left: calc(50% - 50px);
-            background-image: url('splash.svg');
+            background-image: url('skeleton.png');
             background-size: contain;
             background-repeat: no-repeat;
             opacity: 0;
@@ -186,11 +186,11 @@
             <button onclick="laskeJaHyppaa()" id="jumpButton">HYPPÄÄ</button>
         </div>
         <div class="skyscraper"></div> <!-- Added skyscraper element -->
-        <div class="line"></div>
+        
         <div class="character" id="character"></div>
         <div class="street"></div>
         <div class="speed-display" id="speedDisplay">0 km/h</div>
-        <div class="splash" id="splash"></div>
+        <div class="skeleton" id="skeleton"></div>
     </div>
     <script>
         const buildings = {
@@ -265,7 +265,7 @@
             const character = document.getElementById('character');
             const speedDisplay = document.getElementById('speedDisplay');
             const jumpButton = document.getElementById('jumpButton');
-            const splash = document.getElementById('splash');
+            const skeleton = document.getElementById('skeleton');
 
             jumpButton.style.display = 'none';
 
@@ -276,9 +276,9 @@
             setTimeout(() => {
                 speedDisplay.textContent = `${speedKmH} km/h`;
                 speedDisplay.style.opacity = '1';
-                splash.style.animation = 'splash 1000ms ease-in-out'; // Extended splash duration
+                skeleton.style.opacity = '1'; // Extended splash duration
                 setTimeout(() => {
-                    splash.style.opacity = '0';
+                    
                     resetAfterJump(); // Reset after the splash
                 }, 1000); // Extended splash duration
             }, 3000);
@@ -290,7 +290,7 @@
             const jumpButton = document.getElementById('jumpButton');
             jumpButton.style.display = 'block';
             jumpButton.textContent = 'HYPPÄÄ';
-            const splash = document.getElementById('splash');
+            const skeleton = document.getElementById('skeleton');
             splash.style.animation = '';
             // Ei piiloteta nopeusnäyttöä
         }
