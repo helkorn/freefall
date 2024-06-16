@@ -45,6 +45,10 @@
             50% { color: #FF0000; }
             100% { color: #FFFFFF; }
         }
+        @keyframes skeletonFloat {
+            0% { top: calc(100% - 200px); opacity: 1; }
+            100% { top: -100px; opacity: 0; }
+        }
         #output {
             white-space: pre;
             text-align: left;
@@ -53,6 +57,9 @@
         }
         #titleText {
             animation: textBlink 1s infinite;
+        }
+        #versionText {
+            color: #808080;
         }
         .content {
             display: none;
@@ -128,7 +135,7 @@
         @keyframes fall {
             0% { top: 0; right: 60px; } /* Adjusted starting position */
             10% { top: -20px; right: 70px; } /* Adjusted to move slightly left */
-            100% { top: calc(100% - 50px - 66px); right: calc(50% - 30px); } /* Adjusted final position */
+            100% { top: calc(100% - 66px); right: calc(50% - 30px); } /* Adjusted final position */
         }
         @keyframes spin {
             0% { transform: rotate(0deg); }
@@ -277,10 +284,11 @@
             setTimeout(() => {
                 speedDisplay.textContent = `${speedKmH} km/h`;
                 speedDisplay.style.opacity = '1';
-                skeleton.style.opacity = '1'; // Extended splash duration
+                skeleton.style.opacity = '1';
+                skeleton.style.animation = 'skeletonFloat 3s forwards';
                 setTimeout(() => {
                     resetAfterJump(); // Reset after the splash
-                }, 1000); // Extended splash duration
+                }, 3000);
             }, 3000);
         }
 
@@ -291,6 +299,7 @@
             jumpButton.style.display = 'block';
             jumpButton.textContent = 'HYPPÄÄ';
             const skeleton = document.getElementById('skeleton');
+            skeleton.style.opacity = '0';
             skeleton.style.animation = '';
             // Ei piiloteta nopeusnäyttöä
         }
@@ -311,8 +320,7 @@
 
         function startTextAnimation() {
             const text = `*** EXTREME MODE ***
-Version: No 2moro
-
+No2moro
 
 
 
