@@ -100,13 +100,13 @@
             background-size: contain;
             background-repeat: repeat-y; /* Repeats the image vertically */
         }
-        .street {
+        .water {
             position: absolute;
             bottom: 0;
             left: 0;
             width: 100%;
             height: 100px;
-            background: url('street.png') repeat-x;
+            background: url('water_texture.png') repeat-x;
             filter: grayscale(100%);
         }
         .speed-display {
@@ -114,7 +114,7 @@
             bottom: 10px;
             left: 10px;
             font-size: 1.5em;
-            color: #FFFFFF;
+            color: #FF0000;
         }
         @keyframes fall {
             0% { top: 0; right: 60px; } /* Adjusted starting position */
@@ -143,13 +143,13 @@
             83% { background-image: url('sprites/monkey_sprite_6.png'); }
             100% { background-image: url('sprites/monkey_sprite_1.png'); }
         }
-        .autch {
+        .splash {
             position: absolute;
             width: 100px;
             height: 100px;
             top: calc(100% - 200px);
             left: calc(50% - 50px);
-            background-image: url('autch.svg');
+            background-image: url('splash.svg');
             background-size: contain;
             background-repeat: no-repeat;
             opacity: 0;
@@ -163,15 +163,15 @@
         <div id="content" class="content">
             <div>
                 <label for="building">Valitse rakennus:</label>
-                <select id="building" onchange="updateFloors()">
+                <select id="building" onchange="updateLevels()">
                     <!-- Rakennukset täytetään JavaScriptillä -->
                 </select>
             </div>
             <div class="selection-container">
                 <div>
-                    <label for="floor">Kerros:</label>
-                    <select id="floor">
-                        <!-- Kerrokset täytetään JavaScriptillä -->
+                    <label for="level">Taso:</label>
+                    <select id="level">
+                        <!-- Tasot täytetään JavaScriptillä -->
                     </select>
                 </div>
             </div>
@@ -180,22 +180,21 @@
         <div class="skyscraper"></div> <!-- Added skyscraper element -->
         <div class="line"></div>
         <div class="character" id="character"></div>
-        <div class="street"></div>
+        <div class="water"></div>
         <div class="speed-display" id="speedDisplay">0 km/h</div>
-        <div class="autch" id="autch"></div>
+        <div class="splash" id="splash"></div>
     </div>
     <script>
         const buildings = {
-            "Burj Khalifa": 163,
-            "Shanghai Tower": 128,
-            "Abraj Al-Bait Clock Tower": 120,
-            "Ping An Finance Centre": 115,
-            "Lotte World Tower": 123,
-            "One World Trade Center": 104,
-            "Guangzhou CTF Finance Centre": 111,
-            "Tianjin CTF Finance Centre": 98,
-            "China Zun": 108,
-            "Taipei 101": 101
+            "Taipei 101": { floors: 101, heights: [] },
+            "Burj Khalifa": { floors: 163, heights: [] },
+            "One World Trade Center": { floors: 104, heights: [] },
+            "Näsinneula": { floors: 1, heights: [120] },
+            "Olympiastadionin torni": { floors: 1, heights: [72] },
+            "Kuopion Puijon torni": { floors: 1, heights: [75] },
+            "Turun tuomiokirkon kello": { floors: 1, heights: [101] },
+            "Vapaudenpatsas": { floors: 1, heights: [93] },
+            "Eiffel-torni": { floors: 3, heights: [57, 115, 276] }
         };
 
         function populateBuildingOptions() {
@@ -206,42 +205,51 @@
                 option.text = building;
                 buildingSelect.appendChild(option);
             });
-            updateFloors();
+            updateLevels();
         }
 
-        function updateFloors() {
+        function updateLevels() {
             const buildingChoice = document.getElementById('building').value;
-            const floors = buildings[buildingChoice];
-            const floorSelect = document.getElementById('floor');
-            floorSelect.innerHTML = '';
+            const building = buildings[buildingChoice];
+            const levelSelect = document.getElementById('level');
+            levelSelect.innerHTML = '';
 
-            for (let i = 1; i <= floors; i++) {
-                const option = document.createElement('option');
-                option.value = i;
-                option.text = `Kerros ${i}`;
-                floorSelect.appendChild(option);
-            }
-
-            // Set default values
-            if (buildingChoice === "Burj Khalifa") {
-                document.getElementById('floor').value = '1';
+            if (building.floors > 1) {
+                for (let i = 1; i <= building.floors; i++) {
+                    const option = document.createElement('option');
+                    option.value = i;
+                    option.text = `Kerros ${i}`;
+                    levelSelect.appendChild(option);
+                }
+            } else {
+                building.heights.forEach(height => {
+                    const option = document.createElement('option');
+                    option.value = height;
+                    option.text = `Näköalataso ${height} m`;
+                    levelSelect.appendChild(option);
+                });
             }
         }
 
         function calculateSpeed(height) {
             const g = 9.81; // Painovoiman kiihtyvyys m/s^2
             const speed = Math.sqrt(2 * g * height); // Lasketaan nopeus m/s
-            const speedKmH = (speed * 3.6).toFixed(2); // Muutetaan nopeus km/h
-            return Math.min(speedKmH, 200); // Maksiminopeus 200 km/h
+            return (speed * 3.6).toFixed(2); // Muutetaan nopeus km/h
         }
 
         function laskeJaHyppaa() {
             const buildingChoice = document.getElementById('building').value;
-            const selectedFloor = parseInt(document.getElementById('floor').value);
-            let jumpHeight = selectedFloor * 3; // Korkeus arvioitu 3 metriksi per kerros
+            const building = buildings[buildingChoice];
+            let selectedHeight;
 
-            const speedKmH = calculateSpeed(jumpHeight);
+            if (building.floors > 1) {
+                const selectedFloor = parseInt(document.getElementById('level').value);
+                selectedHeight = selectedFloor * 3; // Arvioitu korkeus kerroksille
+            } else {
+                selectedHeight = parseInt(document.getElementById('level').value);
+            }
 
+            const speedKmH = calculateSpeed(selectedHeight);
             startJumpAnimation(speedKmH);
         }
 
@@ -249,7 +257,7 @@
             const character = document.getElementById('character');
             const speedDisplay = document.getElementById('speedDisplay');
             const jumpButton = document.getElementById('jumpButton');
-            const autch = document.getElementById('autch');
+            const splash = document.getElementById('splash');
 
             jumpButton.style.display = 'none';
 
@@ -260,9 +268,9 @@
             setTimeout(() => {
                 speedDisplay.textContent = `${speedKmH} km/h`;
                 speedDisplay.style.opacity = '1';
-                autch.style.animation = 'splash 1000ms ease-in-out'; // Extended splash duration
+                splash.style.animation = 'splash 1000ms ease-in-out'; // Extended splash duration
                 setTimeout(() => {
-                    autch.style.opacity = '0';
+                    splash.style.opacity = '0';
                     resetAfterJump(); // Reset after the splash
                 }, 1000); // Extended splash duration
             }, 3000);
@@ -274,8 +282,8 @@
             const jumpButton = document.getElementById('jumpButton');
             jumpButton.style.display = 'block';
             jumpButton.textContent = 'HYPPÄÄ';
-            const autch = document.getElementById('autch');
-            autch.style.animation = '';
+            const splash = document.getElementById('splash');
+            splash.style.animation = '';
             // Ei piiloteta nopeusnäyttöä
         }
 
