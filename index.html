@@ -131,7 +131,7 @@
             opacity: 0;
         }
         .extreme-button {
-            opacity: 0.5; /* 50% haaleampi */
+            opacity: 0.3; /* Vielä haaleampi */
         }
     </style>
 </head>
@@ -246,7 +246,7 @@
 
             const spinDuration = (Math.random() * 2 + 1) * 1000; // Random spin duration between 1 and 3 seconds
             const fallDuration = 3000; // 3 seconds fall duration
-            const startFallTime = performance.now() + (fallDuration * 0.1) + 300; // Start speed measurement after 10% of the fall duration + 0.3 seconds
+            const startFallTime = performance.now() + (fallDuration * 0.1); // Start speed measurement after 10% of the fall duration
 
             character.style.animation = `jumpAndFall ${fallDuration}ms ease-in, spin ${spinDuration}ms linear`;
 
