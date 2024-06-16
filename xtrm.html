@@ -39,11 +39,19 @@
             50% { border-color: #000000; }
             100% { border-color: #FF0000; }
         }
+        @keyframes textBlink {
+            0% { color: #FFFFFF; }
+            50% { color: #FF0000; }
+            100% { color: #FFFFFF; }
+        }
         #output {
             white-space: pre;
             text-align: left;
             margin-left: 10px;
             color: #FFFFFF;
+        }
+        #titleText {
+            animation: textBlink 1s infinite;
         }
         .content {
             display: none;
@@ -100,9 +108,6 @@
             background-size: contain;
             background-repeat: repeat-y; /* Repeats the image vertically */
         }
-        .water {
-            display: none; /* Piilotettu vesielementti */
-        }
         .street {
             position: absolute;
             bottom: 0;
@@ -117,7 +122,7 @@
             bottom: 10px;
             left: 10px;
             font-size: 1.5em;
-            color: #FFFFFF; /* Muutettu fontin väri valkoiseksi */
+            color: #FFFFFF;
         }
         @keyframes fall {
             0% { top: 0; right: 60px; } /* Adjusted starting position */
@@ -152,7 +157,7 @@
             height: 100px;
             top: calc(100% - 200px);
             left: calc(50% - 50px);
-            background-image: url('autch.svg'); /* Muutettu kuvan nimeksi autch.svg */
+            background-image: url('splash.svg');
             background-size: contain;
             background-repeat: no-repeat;
             opacity: 0;
@@ -165,7 +170,7 @@
         <div id="output"></div>
         <div id="content" class="content">
             <div>
-                <label for="building">Rakennus:</label> <!-- Muutettu tekstiksi Rakennus: -->
+                <label for="building">Rakennus:</label>
                 <select id="building" onchange="updateLevels()">
                     <!-- Rakennukset täytetään JavaScriptillä -->
                 </select>
@@ -183,7 +188,7 @@
         <div class="skyscraper"></div> <!-- Added skyscraper element -->
         <div class="line"></div>
         <div class="character" id="character"></div>
-        <div class="street"></div> <!-- Lisätty katu elementti -->
+        <div class="street"></div>
         <div class="speed-display" id="speedDisplay">0 km/h</div>
         <div class="splash" id="splash"></div>
     </div>
@@ -237,7 +242,7 @@
         function calculateSpeed(height) {
             const g = 9.81; // Painovoiman kiihtyvyys m/s^2
             const speed = Math.sqrt(2 * g * height); // Lasketaan nopeus m/s
-            return Math.min((speed * 3.6), 200).toFixed(2); // Muutetaan nopeus km/h ja rajoitetaan 200 km/h
+            return Math.min(speed * 3.6, 200).toFixed(2); // Muutetaan nopeus km/h ja rajataan 200 km/h
         }
 
         function laskeJaHyppaa() {
@@ -305,8 +310,15 @@
         }
 
         function startTextAnimation() {
-            const text = `FREEFALL NO 2MORO***
-`; // Muutettu teksti
+            const text = `*** FREEFALL XTRM ***
+Version 1.2: No 2moro
+
+
+
+
+
+
+`;
             typeWriter(text, 0, () => {
                 document.getElementById("content").style.display = "block";
             });
@@ -319,4 +331,3 @@
     </script>
 </body>
 </html>
-
