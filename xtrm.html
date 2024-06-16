@@ -228,9 +228,16 @@
             }
         }
 
-        function calculateSpeed(height) {
+        function calculateSpeed(height, position) {
             const g = 9.81; // Painovoiman kiihtyvyys m/s^2
-            const speed = Math.sqrt(2 * g * height); // Lasketaan nopeus m/s
+            let speed = Math.sqrt(2 * g * height); // Lasketaan nopeus m/s
+            
+            // Pystyasento vähentää ilmanvastusta
+            if (position === "upright") {
+                speed *= 1.1; // Kasvatetaan nopeutta 10%
+            } else {
+                speed *= 0.9; // Vähennetään nopeutta 10%
+            }
             return (speed * 3.6).toFixed(2); // Muutetaan nopeus km/h
         }
 
@@ -239,7 +246,9 @@
             const selectedFloor = parseInt(document.getElementById('floor').value);
             let jumpHeight = selectedFloor * 3; // Korkeus arvioitu 3 metriksi per kerros
 
-            const speedKmH = calculateSpeed(jumpHeight);
+            // Oletetaan että pyörimisen jälkeen ukkeli on pystyasennossa
+            const position = "upright"; // tai "spinning" riippuen tilanteesta
+            const speedKmH = calculateSpeed(jumpHeight, position);
 
             startJumpAnimation(speedKmH);
         }
