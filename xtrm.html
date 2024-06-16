@@ -11,7 +11,7 @@
         }
         body {
             font-family: 'C64', monospace;
-            background: linear-gradient(to top, black, #0000FF);
+            background-color: #000000;
             color: #FFFFFF;
             margin: 0;
             padding: 0;
@@ -21,16 +21,6 @@
             height: 100vh;
             overflow: hidden;
             filter: grayscale(100%);
-        }
-        body::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(to top, black, #0000FF);
-            z-index: 0;
         }
         .container {
             position: relative;
@@ -43,8 +33,6 @@
             box-sizing: border-box;
             border: 4px solid #FF0000;
             animation: borderAnimation 2s infinite;
-            filter: none; /* Poista suodatin vain reunoille */
-            z-index: 1;
         }
         @keyframes borderAnimation {
             0% { border-color: #FF0000; }
@@ -65,10 +53,6 @@
             flex-direction: column;
             align-items: flex-start;
         }
-        .selection-container label {
-            display: block;
-            margin-bottom: 10px; /* Lisää tyhjä väli */
-        }
         select {
             background: black;
             color: #FFFFFF;
@@ -87,10 +71,18 @@
             cursor: pointer;
             margin-top: 10px;
         }
+        .line {
+            position: absolute;
+            top: 66px;
+            right: 0;
+            width: 200px;
+            height: 10px;
+            background: white;
+        }
         .character {
             position: absolute;
             top: 0;
-            right: 60px; /* Moved 100px to the left */
+            right: 0;
             width: 60px;
             height: 66px;
             background-image: url('sprites/monkey_sprite_1.png');
@@ -98,23 +90,13 @@
             animation: turn 2000ms steps(6) infinite;
             filter: grayscale(100%);
         }
-        .skyscraper {
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 100px; /* Set width to 100px */
-            height: 100%; /* Full height */
-            background-image: url('skyscraper.png');
-            background-size: contain;
-            background-repeat: repeat-y; /* Repeats the image vertically */
-        }
-        .cityline {
+        .water {
             position: absolute;
             bottom: 0;
             left: 0;
             width: 100%;
             height: 100px;
-            background: url('cityline.png') repeat-x;
+            background: url('water_texture.png') repeat-x;
             filter: grayscale(100%);
         }
         .speed-display {
@@ -125,9 +107,9 @@
             color: #FF0000;
         }
         @keyframes fall {
-            0% { top: 0; right: 60px; } /* Adjusted starting position */
-            10% { top: -20px; right: 70px; } /* Adjusted to move slightly left */
-            100% { top: calc(100% - 50px - 66px); right: 110px; } /* Adjusted final position */
+            0% { top: 0; right: 0; }
+            10% { top: -20px; right: 10px; } /* Simulate jump upwards and move slightly left */
+            100% { top: calc(100% - 50px - 66px); right: 50px; } /* Final position slightly left */
         }
         @keyframes spin {
             0% { transform: rotate(0deg); }
@@ -185,9 +167,9 @@
             </div>
             <button onclick="laskeJaHyppaa()" id="jumpButton">HYPPÄÄ</button>
         </div>
-        <div class="skyscraper"></div> <!-- Added skyscraper element -->
+        <div class="line"></div>
         <div class="character" id="character"></div>
-        <div class="cityline"></div> <!-- Changed water to cityline -->
+        <div class="water"></div>
         <div class="speed-display" id="speedDisplay">0 km/h</div>
         <div class="splash" id="splash"></div>
     </div>
