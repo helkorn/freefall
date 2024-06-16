@@ -97,6 +97,12 @@
             font-size: 1.5em;
             color: #444444; /* Change to darker color */
         }
+        .extreme-mode-image {
+            display: block;
+            margin: 20px auto;
+            width: 200px;
+            height: auto;
+        }
         @keyframes fall {
             0% { top: 0; right: 0; }
             10% { top: -20px; right: 10px; } /* Simulate jump upwards and move slightly left */
@@ -135,17 +141,6 @@
             background-repeat: no-repeat;
             opacity: 0;
         }
-        .extreme-link {
-            display: none;
-            color: #000000;
-            text-decoration: none;
-            font-size: 12px;
-            font-family: 'C64', monospace;
-            opacity: 0.2;
-        }
-        .extreme-link:hover {
-            opacity: 1;
-        }
     </style>
 </head>
 <body>
@@ -174,13 +169,13 @@
                 </div>
             </div>
             <button onclick="laskeJaHyppaa()" id="jumpButton">HYPPÄÄ</button>
-            <a href="xtrm.html" class="extreme-link" id="extremeLink">EXTREME MODE</a>
         </div>
         <div class="line"></div>
         <div class="character" id="character"></div>
         <div class="water"></div>
         <div class="speed-display" id="speedDisplay">0 km/h</div>
         <div class="splash" id="splash"></div>
+        <img src="xtrm_mode.png" alt="Extreme Mode" class="extreme-mode-image">
     </div>
     <script>
         const ships = {};
@@ -208,8 +203,6 @@
                 option.text = ship;
                 shipSelect.appendChild(option);
             });
-            // Set default selection to "Isabella"
-            shipSelect.value = "Isabella";
             updateDecks();
         }
 
@@ -224,12 +217,6 @@
                 option.value = ship.allowedDecks[i];
                 option.text = `Kansi ${ship.allowedDecks[i]}`;
                 deckSelect.appendChild(option);
-            }
-
-            // Set default values
-            if (shipChoice === "Isabella") {
-                document.getElementById('kansi').value = '9';
-                document.getElementById('kaide').value = 'kyllä';
             }
         }
 
@@ -260,10 +247,8 @@
             const speedDisplay = document.getElementById('speedDisplay');
             const jumpButton = document.getElementById('jumpButton');
             const splash = document.getElementById('splash');
-            const extremeLink = document.getElementById('extremeLink');
 
             jumpButton.style.display = 'none';
-            extremeLink.style.display = 'block';
 
             const spinDuration = (Math.random() * 2 + 1) * 1000; // Random spin duration between 1 and 3 seconds
 
@@ -272,11 +257,11 @@
             setTimeout(() => {
                 speedDisplay.textContent = `${speedKmH} km/h`;
                 speedDisplay.style.opacity = '1';
-                splash.style.animation = 'splash 1000ms ease-in-out'; // Extended splash duration
+                splash.style.animation = 'splash 500ms ease-in-out';
                 setTimeout(() => {
                     splash.style.opacity = '0';
                     resetAfterJump(); // Reset after the splash
-                }, 1000); // Extended splash duration
+                }, 500);
             }, 3000);
         }
 
