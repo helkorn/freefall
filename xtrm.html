@@ -127,7 +127,7 @@
         @keyframes fall {
             0% { top: 0; right: 60px; } /* Adjusted starting position */
             10% { top: -20px; right: 70px; } /* Adjusted to move slightly left */
-            100% { top: calc(100% - 50px - 66px); right: calc(50% - 30px); transform: rotate(1080deg); } /* Adjusted final position */
+            100% { top: calc(100% - 50px - 66px); right: calc(50% - 30px); } /* Adjusted final position */
         }
         @keyframes spin {
             0% { transform: rotate(0deg); }
@@ -175,6 +175,18 @@
         transition: opacity 0.1s ease-in-out;
         z-index: 10;
     }
+    .skeleton {
+        position: absolute;
+        width: 100px;
+        height: 100px;
+        top: calc(100% - 200px);
+        left: calc(50% - 50px);
+        background-image: url('skeleton.png');
+        background-size: contain;
+        background-repeat: no-repeat;
+        opacity: 0;
+        transition: transform 2s ease-in-out;
+    }
     </style>
     
 </head>
@@ -186,7 +198,14 @@
             <div>
                 <label for="building">Rakennus:</label>
                 <select id="building" onchange="updateLevels()">
-                    <!-- Rakennukset täytetään JavaScriptillä -->
+                    <option value="Burj Khalifa">Burj Khalifa</option>
+                    <option value="World Trade Center">World Trade Center</option>
+                    <option value="Näsinneula">Näsinneula</option>
+                    <option value="Olympiastadionin torni">Olympiastadionin torni</option>
+                    <option value="Kuopion Puijon torni">Kuopion Puijon torni</option>
+                    <option value="Turun tuomiokirkko">Turun tuomiokirkko</option>
+                    <option value="Vapaudenpatsas">Vapaudenpatsas</option>
+                    <option value="Eiffel-torni">Eiffel-torni</option>
                 </select>
             </div>
             <div class="selection-container">
@@ -214,7 +233,7 @@
             "Näsinneula": { floors: 1, heights: [120] },
             "Olympiastadionin torni": { floors: 1, heights: [72] },
             "Kuopion Puijon torni": { floors: 1, heights: [75] },
-            "Turun tuomiokirkko": { floors: 1, heights: [101] },
+            "Turun tuomiokirkon kello": { floors: 1, heights: [101] },
             "Vapaudenpatsas": { floors: 1, heights: [93] },
             "Eiffel-torni": { floors: 3, heights: [57, 115, 276] }
         };
@@ -345,3 +364,4 @@ Version: No 2moro
     </script>
 </body>
 </html>
+
