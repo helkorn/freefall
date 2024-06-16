@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Freefall</title>
+    <title>Freefall - Extreme Mode</title>
     <style>
         @font-face {
             font-family: 'C64';
@@ -12,7 +12,7 @@
         body {
             font-family: 'C64', monospace;
             background-color: #000000;
-            color: #87CEFA;
+            color: #FFFFFF;
             margin: 0;
             padding: 0;
             display: flex;
@@ -20,6 +20,7 @@
             align-items: flex-start;
             height: 100vh;
             overflow: hidden;
+            filter: grayscale(100%);
         }
         .container {
             position: relative;
@@ -30,13 +31,19 @@
             background-color: #0000FF;
             padding: 20px;
             box-sizing: border-box;
-            border: 4px solid #000080;
+            border: 4px solid #FF0000;
+            animation: borderAnimation 2s infinite;
+        }
+        @keyframes borderAnimation {
+            0% { border-color: #FF0000; }
+            50% { border-color: #000000; }
+            100% { border-color: #FF0000; }
         }
         #output {
             white-space: pre;
             text-align: left;
             margin-left: 10px;
-            color: #87CEFA;
+            color: #FFFFFF;
         }
         .content {
             display: none;
@@ -48,7 +55,7 @@
         }
         select {
             background: black;
-            color: #87CEFA;
+            color: #FFFFFF;
             border: none;
             font-family: 'C64', monospace;
             font-size: 16px;
@@ -56,8 +63,8 @@
         }
         button {
             background: black;
-            color: #87CEFA;
-            border: 1px solid #87CEFA;
+            color: #FFFFFF;
+            border: 1px solid #FFFFFF;
             padding: 5px 10px;
             font-family: 'C64', monospace;
             font-size: 16px;
@@ -76,11 +83,12 @@
             position: absolute;
             top: 0;
             right: 0;
-            width: 60px;
-            height: 66px;
-            background-image: url('sprites/monkey_sprite_1.png');
-            background-size: cover;
-            animation: turn 2000ms steps(6) infinite;
+            width: 20px;
+            height: 30px;
+            background-image: url('pixel_skeleton.png');
+            background-size: 96px 96px;
+            animation: turn 2000ms steps(8) infinite;
+            filter: grayscale(100%);
         }
         .water {
             position: absolute;
@@ -89,18 +97,19 @@
             width: 100%;
             height: 100px;
             background: url('water_texture.png') repeat-x;
+            filter: grayscale(100%);
         }
         .speed-display {
             position: absolute;
             bottom: 10px;
             left: 10px;
             font-size: 1.5em;
-            color: #444444; /* Change to darker color */
+            color: #FF0000;
         }
         @keyframes fall {
             0% { top: 0; right: 0; }
             10% { top: -20px; right: 10px; } /* Simulate jump upwards and move slightly left */
-            100% { top: calc(100% - 50px - 66px); right: 50px; } /* Final position slightly left */
+            100% { top: calc(100% - 50px - 30px); right: 50px; } /* Final position slightly left */
         }
         @keyframes spin {
             0% { transform: rotate(0deg); }
@@ -116,13 +125,15 @@
             100% { opacity: 0; }
         }
         @keyframes turn {
-            0% { background-image: url('sprites/monkey_sprite_1.png'); }
-            16% { background-image: url('sprites/monkey_sprite_2.png'); }
-            32% { background-image: url('sprites/monkey_sprite_3.png'); }
-            50% { background-image: url('sprites/monkey_sprite_4.png'); }
-            66% { background-image: url('sprites/monkey_sprite_5.png'); }
-            83% { background-image: url('sprites/monkey_sprite_6.png'); }
-            100% { background-image: url('sprites/monkey_sprite_1.png'); }
+            0% { background-position: 16px 17px; }
+            12.5% { background-position: 47px 17px; }
+            25% { background-position: 82px 17px; }
+            37.5% { background-position: 18px 50px; }
+            50% { background-position: 49px 50px; }
+            62.5% { background-position: 81px 50px; }
+            75% { background-position: 17px 83px; }
+            87.5% { background-position: 49px 83px; }
+            100% { background-position: 16px 17px; }
         }
         .splash {
             position: absolute;
@@ -134,17 +145,7 @@
             background-size: contain;
             background-repeat: no-repeat;
             opacity: 0;
-        }
-        .extreme-link {
-            display: none;
-            color: #000000;
-            text-decoration: none;
-            font-size: 12px;
-            font-family: 'C64', monospace;
-            opacity: 0.2;
-        }
-        .extreme-link:hover {
-            opacity: 1;
+            filter: grayscale(100%);
         }
     </style>
 </head>
@@ -153,28 +154,20 @@
         <div id="output"></div>
         <div id="content" class="content">
             <div>
-                <label for="laiva">Valitse laiva:</label>
-                <select id="laiva" onchange="updateDecks()">
-                    <!-- Laivat täytetään JavaScriptillä -->
+                <label for="building">Valitse rakennus:</label>
+                <select id="building" onchange="updateFloors()">
+                    <!-- Rakennukset täytetään JavaScriptillä -->
                 </select>
             </div>
             <div class="selection-container">
                 <div>
-                    <label for="kansi">Kansi:</label>
-                    <select id="kansi">
-                        <!-- Kannet täytetään JavaScriptillä -->
-                    </select>
-                </div>
-                <div>
-                    <label for="kaide">Seisotko kaiteella?</label>
-                    <select id="kaide">
-                        <option value="ei">Ei</option>
-                        <option value="kyllä">Kyllä</option>
+                    <label for="floor">Kerros:</label>
+                    <select id="floor">
+                        <!-- Kerrokset täytetään JavaScriptillä -->
                     </select>
                 </div>
             </div>
             <button onclick="laskeJaHyppaa()" id="jumpButton">HYPPÄÄ</button>
-            <a href="xtrm.html" class="extreme-link" id="extremeLink">EXTREME MODE</a>
         </div>
         <div class="line"></div>
         <div class="character" id="character"></div>
@@ -183,51 +176,46 @@
         <div class="splash" id="splash"></div>
     </div>
     <script>
-        const ships = {};
+        const buildings = {
+            "Burj Khalifa": 163,
+            "Shanghai Tower": 128,
+            "Abraj Al-Bait Clock Tower": 120,
+            "Ping An Finance Centre": 115,
+            "Lotte World Tower": 123,
+            "One World Trade Center": 104,
+            "Guangzhou CTF Finance Centre": 111,
+            "Tianjin CTF Finance Centre": 98,
+            "China Zun": 108,
+            "Taipei 101": 101
+        };
 
-        fetch('ships.csv')
-            .then(response => response.text())
-            .then(data => {
-                const lines = data.split('\n').slice(1);
-                lines.forEach(line => {
-                    const [ship, decks, belowWaterline, ...allowedDecks] = line.split(',');
-                    ships[ship] = {
-                        decks: parseInt(decks),
-                        belowWaterline: parseInt(belowWaterline),
-                        allowedDecks: allowedDecks.map(Number)
-                    };
-                });
-                populateShipOptions();
-            });
-
-        function populateShipOptions() {
-            const shipSelect = document.getElementById('laiva');
-            Object.keys(ships).forEach(ship => {
+        function populateBuildingOptions() {
+            const buildingSelect = document.getElementById('building');
+            Object.keys(buildings).forEach(building => {
                 const option = document.createElement('option');
-                option.value = ship;
-                option.text = ship;
-                shipSelect.appendChild(option);
+                option.value = building;
+                option.text = building;
+                buildingSelect.appendChild(option);
             });
-            updateDecks();
+            updateFloors();
         }
 
-        function updateDecks() {
-            const shipChoice = document.getElementById('laiva').value;
-            const ship = ships[shipChoice];
-            const deckSelect = document.getElementById('kansi');
-            deckSelect.innerHTML = '';
+        function updateFloors() {
+            const buildingChoice = document.getElementById('building').value;
+            const floors = buildings[buildingChoice];
+            const floorSelect = document.getElementById('floor');
+            floorSelect.innerHTML = '';
 
-            for (let i = 0; i < ship.allowedDecks.length; i++) {
+            for (let i = 1; i <= floors; i++) {
                 const option = document.createElement('option');
-                option.value = ship.allowedDecks[i];
-                option.text = `Kansi ${ship.allowedDecks[i]}`;
-                deckSelect.appendChild(option);
+                option.value = i;
+                option.text = `Kerros ${i}`;
+                floorSelect.appendChild(option);
             }
 
             // Set default values
-            if (shipChoice === "Isabella") {
-                document.getElementById('kansi').value = '6';
-                document.getElementById('kaide').value = 'ei';
+            if (buildingChoice === "Burj Khalifa") {
+                document.getElementById('floor').value = '1';
             }
         }
 
@@ -238,15 +226,9 @@
         }
 
         function laskeJaHyppaa() {
-            const shipChoice = document.getElementById('laiva').value;
-            const selectedDeck = parseInt(document.getElementById('kansi').value);
-            const belowWaterline = ships[shipChoice].belowWaterline;
-            let jumpHeight = (selectedDeck - belowWaterline) * 3; // Kannen korkeus arvioitu 3 metriksi
-
-            const railChoice = document.getElementById('kaide').value;
-            if (railChoice === 'kyllä') {
-                jumpHeight += 1; // Lisää yksi metri jos seisotaan kaiteen päällä
-            }
+            const buildingChoice = document.getElementById('building').value;
+            const selectedFloor = parseInt(document.getElementById('floor').value);
+            let jumpHeight = selectedFloor * 3; // Korkeus arvioitu 3 metriksi per kerros
 
             const speedKmH = calculateSpeed(jumpHeight);
 
@@ -258,10 +240,8 @@
             const speedDisplay = document.getElementById('speedDisplay');
             const jumpButton = document.getElementById('jumpButton');
             const splash = document.getElementById('splash');
-            const extremeLink = document.getElementById('extremeLink');
 
             jumpButton.style.display = 'none';
-            extremeLink.style.display = 'block';
 
             const spinDuration = (Math.random() * 2 + 1) * 1000; // Random spin duration between 1 and 3 seconds
 
@@ -280,7 +260,7 @@
 
         function resetAfterJump() {
             const character = document.getElementById('character');
-            character.style.animation = 'turn 2000ms steps(6) infinite'; // Restart turning animation
+            character.style.animation = 'turn 2000ms steps(8) infinite'; // Restart turning animation
             const jumpButton = document.getElementById('jumpButton');
             jumpButton.style.display = 'block';
             jumpButton.textContent = 'HYPPÄÄ';
@@ -320,6 +300,7 @@ READY.
 
         document.addEventListener("DOMContentLoaded", function() {
             startTextAnimation();
+            populateBuildingOptions();
         });
     </script>
 </body>
