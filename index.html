@@ -130,6 +130,9 @@
             background-repeat: no-repeat;
             opacity: 0;
         }
+        .extreme-button {
+            opacity: 0.5; /* 50% haaleampi */
+        }
     </style>
 </head>
 <body>
@@ -158,7 +161,7 @@
                 </div>
             </div>
             <button onclick="laskeJaHyppaa()" id="jumpButton">HYPPÄÄ</button>
-            <button onclick="toggleExtremeMode()" id="extremeButton">EXTREME MODE</button>
+            <button onclick="goToExtremeMode()" id="extremeButton" class="extreme-button">EXTREME MODE</button>
         </div>
         <div class="line"></div>
         <div class="character" id="character"></div>
@@ -168,7 +171,6 @@
     </div>
     <script>
         const ships = {};
-        let extremeMode = false;
 
         fetch('ships.csv')
             .then(response => response.text())
@@ -227,10 +229,6 @@
                 jumpHeight += 1; // Lisää yksi metri jos seisotaan kaiteen päällä
             }
 
-            if (extremeMode) {
-                jumpHeight *= 1.5; // 50% higher jump in extreme mode
-            }
-
             const speedMPS = calculateSpeed(jumpHeight);
 
             startJumpAnimation(speedMPS, jumpHeight);
@@ -248,7 +246,7 @@
 
             const spinDuration = (Math.random() * 2 + 1) * 1000; // Random spin duration between 1 and 3 seconds
             const fallDuration = 3000; // 3 seconds fall duration
-            const startFallTime = performance.now() + (fallDuration * 0.1); // Start speed measurement after 10% of the fall duration
+            const startFallTime = performance.now() + (fallDuration * 0.1) + 300; // Start speed measurement after 10% of the fall duration + 0.3 seconds
 
             character.style.animation = `jumpAndFall ${fallDuration}ms ease-in, spin ${spinDuration}ms linear`;
 
@@ -291,14 +289,8 @@
             // Ei piiloteta nopeusnäyttöä
         }
 
-        function toggleExtremeMode() {
-            extremeMode = !extremeMode;
-            const extremeButton = document.getElementById('extremeButton');
-            if (extremeMode) {
-                extremeButton.textContent = 'EXTREME MODE ON';
-            } else {
-                extremeButton.textContent = 'EXTREME MODE';
-            }
+        function goToExtremeMode() {
+            window.location.href = 'xtrm.html';
         }
 
         function typeWriter(text, i, fnCallback, speed = 50) {
@@ -336,4 +328,3 @@ READY.
     </script>
 </body>
 </html>
-
