@@ -127,7 +127,7 @@
         @keyframes fall {
             0% { top: 0; right: 60px; } /* Adjusted starting position */
             10% { top: -20px; right: 70px; } /* Adjusted to move slightly left */
-            100% { top: calc(100% - 50px - 66px); right: calc(50% - 30px); } /* Adjusted final position */
+            100% { top: calc(100% - 50px - 66px); right: calc(50% - 30px); transform: rotate(1080deg); } /* Adjusted final position */
         }
         @keyframes spin {
             0% { transform: rotate(0deg); }
@@ -163,10 +163,24 @@
             opacity: 0;
             filter: grayscale(100%);
         }
+    
+    .flash {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: white;
+        opacity: 0;
+        transition: opacity 0.1s ease-in-out;
+        z-index: 10;
+    }
     </style>
+    
 </head>
 <body>
-    <div class="container">
+    <div class="flash" id="flash"></div>
+<div class="container">
         <div id="output"></div>
         <div id="content" class="content">
             <div>
