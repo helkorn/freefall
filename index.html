@@ -136,15 +136,14 @@
             opacity: 0;
         }
         .extreme-button {
-            background: rgba(128, 128, 128, 0.5); /* Harmaa ja 50% läpinäkyvä */
-            color: #D3D3D3; /* Hillitty harmaasävy */
-            border: 1px solid #D3D3D3;
-            padding: 5px 10px;
+            background: rgba(128, 128, 128, 0.5);
+            color: rgba(128, 128, 128, 0.8);
+            border: 1px solid rgba(128, 128, 128, 0.5);
+            padding: 3px 6px;
             font-family: 'C64', monospace;
-            font-size: 12px; /* Pienempi fonttikoko */
+            font-size: 12px;
             cursor: pointer;
-            margin-top: 10px;
-            margin-left: 10px; /* Erottaa painikkeet toisistaan */
+            margin-left: 10px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -176,11 +175,13 @@
                     </select>
                 </div>
             </div>
-            <button onclick="laskeJaHyppaa()" id="jumpButton">HYPPÄÄ</button>
-            <button class="extreme-button" onclick="goExtremeMode()">
-                <span>extreme</span>
-                <span>mode</span>
-            </button>
+            <div style="display: flex; align-items: center;">
+                <button onclick="laskeJaHyppaa()" id="jumpButton">HYPPÄÄ</button>
+                <button onclick="window.location.href='xtrm.html'" class="extreme-button">
+                    <span>EXTREME</span>
+                    <span>MODE</span>
+                </button>
+            </div>
         </div>
         <div class="line"></div>
         <div class="character" id="character"></div>
@@ -214,8 +215,6 @@
                 option.text = ship;
                 shipSelect.appendChild(option);
             });
-            // Set default selection to Isabella
-            shipSelect.value = "Isabella";
             updateDecks();
         }
 
@@ -231,12 +230,7 @@
                 option.text = `Kansi ${ship.allowedDecks[i]}`;
                 deckSelect.appendChild(option);
             }
-            // Set default selection to deck 9
-            deckSelect.value = "9";
         }
-
-        // Set default selection for rail to "kyllä"
-        document.getElementById('kaide').value = "kyllä";
 
         function calculateSpeed(height) {
             const g = 9.81; // Painovoiman kiihtyvyys m/s^2
@@ -321,10 +315,6 @@ READY.
             typeWriter(text, 0, () => {
                 document.getElementById("content").style.display = "block";
             });
-        }
-
-        function goExtremeMode() {
-            window.location.href = 'xtrm.html';
         }
 
         document.addEventListener("DOMContentLoaded", function() {
