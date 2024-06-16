@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Freefall</title>
+    <title>XTREME MODE</title>
     <style>
         @font-face {
             font-family: 'C64';
@@ -12,7 +12,7 @@
         body {
             font-family: 'C64', monospace;
             background-color: #000000;
-            color: #87CEFA;
+            color: #FFFFFF;
             margin: 0;
             padding: 0;
             display: flex;
@@ -20,6 +20,7 @@
             align-items: flex-start;
             height: 100vh;
             overflow: hidden;
+            filter: grayscale(100%);
         }
         .container {
             position: relative;
@@ -30,13 +31,20 @@
             background-color: #0000FF;
             padding: 20px;
             box-sizing: border-box;
-            border: 4px solid #000080;
+            border: 4px solid;
+            border-color: #FF0000;
+            animation: borderAnimation 2s infinite;
+        }
+        @keyframes borderAnimation {
+            0% { border-color: #FF0000; }
+            50% { border-color: #000000; }
+            100% { border-color: #FF0000; }
         }
         #output {
             white-space: pre;
             text-align: left;
             margin-left: 10px;
-            color: #87CEFA;
+            color: #FFFFFF;
         }
         .content {
             display: none;
@@ -48,7 +56,7 @@
         }
         select {
             background: black;
-            color: #87CEFA;
+            color: #FFFFFF;
             border: none;
             font-family: 'C64', monospace;
             font-size: 16px;
@@ -56,8 +64,8 @@
         }
         button {
             background: black;
-            color: #87CEFA;
-            border: 1px solid #87CEFA;
+            color: #FFFFFF;
+            border: 1px solid #FFFFFF;
             padding: 5px 10px;
             font-family: 'C64', monospace;
             font-size: 16px;
@@ -68,45 +76,51 @@
             position: absolute;
             top: 66px;
             right: 0;
-            width: 200px;
+            width: 40px; /* Reduced to 80% */
             height: 10px;
             background: white;
         }
         .character {
             position: absolute;
-            top: 0;
-            right: 0;
-            width: 60px;
+            top: 10px;
+            right: 60px; /* Moved 100px to the left */
+            width: 32px;
             height: 66px;
-            background-image: url('sprites/monkey_sprite_1.png');
+            background-image: url('kekkonen.png');
             background-size: cover;
             animation: turn 2000ms steps(6) infinite;
+            filter: grayscale(100%);
         }
-        .water {
+        .skyscraper {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100px; /* Set width to 100px */
+            height: 100%; /* Full height */
+            background-image: url('skyscraper.png');
+            background-size: contain;
+            background-repeat: repeat-y; /* Repeats the image vertically */
+        }
+        .road {
             position: absolute;
             bottom: 0;
             left: 0;
             width: 100%;
             height: 100px;
-            background: url('water_texture.png') repeat-x;
+            background: url('ontheroad.png') repeat-x;
+            filter: grayscale(100%);
         }
         .speed-display {
             position: absolute;
             bottom: 10px;
             left: 10px;
             font-size: 1.5em;
-            color: #444444; /* Change to darker color */
-        }
-        .extreme-mode-image {
-            display: block;
-            margin: 20px auto;
-            width: 200px;
-            height: auto;
+            color: #FF0000;
         }
         @keyframes fall {
-            0% { top: 0; right: 0; }
-            10% { top: -20px; right: 10px; } /* Simulate jump upwards and move slightly left */
-            100% { top: calc(100% - 50px - 66px); right: 50px; } /* Final position slightly left */
+            0% { top: 0; right: 60px; } /* Adjusted starting position */
+            10% { top: -20px; right: 70px; } /* Adjusted to move slightly left */
+            100% { top: calc(100% - 50px - 66px); right: 110px; } /* Adjusted final position */
         }
         @keyframes spin {
             0% { transform: rotate(0deg); }
@@ -117,29 +131,34 @@
                 opacity: 1;
             }
         }
-        @keyframes splash {
-            0% { opacity: 1; }
-            100% { opacity: 0; }
-        }
+        /* REM: @keyframes splash { 0% { opacity: 1; } 100% { opacity: 0; } } */
         @keyframes turn {
-            0% { background-image: url('sprites/monkey_sprite_1.png'); }
-            16% { background-image: url('sprites/monkey_sprite_2.png'); }
-            32% { background-image: url('sprites/monkey_sprite_3.png'); }
-            50% { background-image: url('sprites/monkey_sprite_4.png'); }
-            66% { background-image: url('sprites/monkey_sprite_5.png'); }
-            83% { background-image: url('sprites/monkey_sprite_6.png'); }
-            100% { background-image: url('sprites/monkey_sprite_1.png'); }
+            0% { background-image: url('kekkonen.png'); }
+            16% { background-image: url('kekkonen.png'); }
+            32% { background-image: url('kekkonen.png'); }
+            50% { background-image: url('kekkonen.png'); }
+            66% { background-image: url('kekkonen.png'); }
+            83% { background-image: url('kekkonen.png'); }
+            100% { background-image: url('kekkonen.png'); }
         }
-        .splash {
+        .platform {
             position: absolute;
-            width: 100px;
-            height: 100px;
-            top: calc(100% - 200px);
-            left: calc(50% - 50px);
-            background-image: url('splash.svg');
+            top: 76px;
+            right: 60px;
+            width: 50px;
+            height: 10px;
+            background-color: white;
+        }
+        /* REM: .splash { position: absolute; width: 100px; height: 100px; top: calc(100% - 200px); left: calc(50% - 50px); background-image: url('splash.svg'); background-size: contain; background-repeat: no-repeat; opacity: 0; filter: grayscale(100%); } */
+        .logo {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            width: 50px;
+            height: auto;
+            background-image: url('xtrm_mode.png');
             background-size: contain;
             background-repeat: no-repeat;
-            opacity: 0;
         }
     </style>
 </head>
@@ -148,75 +167,74 @@
         <div id="output"></div>
         <div id="content" class="content">
             <div>
-                <label for="laiva">Valitse laiva:</label>
-                <select id="laiva" onchange="updateDecks()">
-                    <!-- Laivat täytetään JavaScriptillä -->
+                <label for="building">Rakennus:</label>
+                <select id="building" onchange="updateLevels()">
+                    <!-- Rakennukset täytetään JavaScriptillä -->
                 </select>
             </div>
             <div class="selection-container">
                 <div>
-                    <label for="kansi">Kansi:</label>
-                    <select id="kansi">
-                        <!-- Kannet täytetään JavaScriptillä -->
-                    </select>
-                </div>
-                <div>
-                    <label for="kaide">Seisotko kaiteella?</label>
-                    <select id="kaide">
-                        <option value="ei">Ei</option>
-                        <option value="kyllä">Kyllä</option>
+                    <label for="level">Taso:</label>
+                    <select id="level">
+                        <!-- Tasot täytetään JavaScriptillä -->
                     </select>
                 </div>
             </div>
             <button onclick="laskeJaHyppaa()" id="jumpButton">HYPPÄÄ</button>
         </div>
+        <div class="skyscraper"></div> <!-- Added skyscraper element -->
         <div class="line"></div>
         <div class="character" id="character"></div>
-        <div class="water"></div>
+        <div class="platform"></div>
+        <div class="road"></div>
         <div class="speed-display" id="speedDisplay">0 km/h</div>
-        <div class="splash" id="splash"></div>
-        <img src="xtrm_mode.png" alt="Extreme Mode" class="extreme-mode-image">
+        <!-- REM: <div class="splash" id="splash"></div> -->
+        <div class="logo"></div>
     </div>
     <script>
-        const ships = {};
+        const buildings = {
+            "Taipei 101": { floors: 101, heights: [] },
+            "Burj Khalifa": { floors: 163, heights: [] },
+            "World Trade Center": { floors: 104, heights: [] },
+            "Näsinneula": { floors: 1, heights: [120] },
+            "Olympiastadionin torni": { floors: 1, heights: [72] },
+            "Kuopion Puijon torni": { floors: 1, heights: [75] },
+            "Turun tuomiokirkon kello": { floors: 1, heights: [101] },
+            "Vapaudenpatsas": { floors: 1, heights: [93] },
+            "Eiffel-torni": { floors: 3, heights: [57, 115, 276] }
+        };
 
-        fetch('ships.csv')
-            .then(response => response.text())
-            .then(data => {
-                const lines = data.split('\n').slice(1);
-                lines.forEach(line => {
-                    const [ship, decks, belowWaterline, ...allowedDecks] = line.split(',');
-                    ships[ship] = {
-                        decks: parseInt(decks),
-                        belowWaterline: parseInt(belowWaterline),
-                        allowedDecks: allowedDecks.map(Number)
-                    };
-                });
-                populateShipOptions();
-            });
-
-        function populateShipOptions() {
-            const shipSelect = document.getElementById('laiva');
-            Object.keys(ships).forEach(ship => {
+        function populateBuildingOptions() {
+            const buildingSelect = document.getElementById('building');
+            Object.keys(buildings).forEach(building => {
                 const option = document.createElement('option');
-                option.value = ship;
-                option.text = ship;
-                shipSelect.appendChild(option);
+                option.value = building;
+                option.text = building;
+                buildingSelect.appendChild(option);
             });
-            updateDecks();
+            updateLevels();
         }
 
-        function updateDecks() {
-            const shipChoice = document.getElementById('laiva').value;
-            const ship = ships[shipChoice];
-            const deckSelect = document.getElementById('kansi');
-            deckSelect.innerHTML = '';
+        function updateLevels() {
+            const buildingChoice = document.getElementById('building').value;
+            const building = buildings[buildingChoice];
+            const levelSelect = document.getElementById('level');
+            levelSelect.innerHTML = '';
 
-            for (let i = 0; i < ship.allowedDecks.length; i++) {
-                const option = document.createElement('option');
-                option.value = ship.allowedDecks[i];
-                option.text = `Kansi ${ship.allowedDecks[i]}`;
-                deckSelect.appendChild(option);
+            if (building.floors > 1) {
+                for (let i = 1; i <= building.floors; i++) {
+                    const option = document.createElement('option');
+                    option.value = i;
+                    option.text = `Kerros ${i}`;
+                    levelSelect.appendChild(option);
+                }
+            } else {
+                building.heights.forEach(height => {
+                    const option = document.createElement('option');
+                    option.value = height;
+                    option.text = `Näköalataso ${height} m`;
+                    levelSelect.appendChild(option);
+                });
             }
         }
 
@@ -227,18 +245,18 @@
         }
 
         function laskeJaHyppaa() {
-            const shipChoice = document.getElementById('laiva').value;
-            const selectedDeck = parseInt(document.getElementById('kansi').value);
-            const belowWaterline = ships[shipChoice].belowWaterline;
-            let jumpHeight = (selectedDeck - belowWaterline) * 3; // Kannen korkeus arvioitu 3 metriksi
+            const buildingChoice = document.getElementById('building').value;
+            const building = buildings[buildingChoice];
+            let selectedHeight;
 
-            const railChoice = document.getElementById('kaide').value;
-            if (railChoice === 'kyllä') {
-                jumpHeight += 1; // Lisää yksi metri jos seisotaan kaiteen päällä
+            if (building.floors > 1) {
+                const selectedFloor = parseInt(document.getElementById('level').value);
+                selectedHeight = selectedFloor * 3; // Arvioitu korkeus kerroksille
+            } else {
+                selectedHeight = parseInt(document.getElementById('level').value);
             }
 
-            const speedKmH = calculateSpeed(jumpHeight);
-
+            const speedKmH = calculateSpeed(selectedHeight);
             startJumpAnimation(speedKmH);
         }
 
@@ -246,7 +264,7 @@
             const character = document.getElementById('character');
             const speedDisplay = document.getElementById('speedDisplay');
             const jumpButton = document.getElementById('jumpButton');
-            const splash = document.getElementById('splash');
+            // REM: const splash = document.getElementById('splash');
 
             jumpButton.style.display = 'none';
 
@@ -257,11 +275,11 @@
             setTimeout(() => {
                 speedDisplay.textContent = `${speedKmH} km/h`;
                 speedDisplay.style.opacity = '1';
-                splash.style.animation = 'splash 500ms ease-in-out';
+                // REM: splash.style.animation = 'splash 1000ms ease-in-out'; // Extended splash duration
                 setTimeout(() => {
-                    splash.style.opacity = '0';
+                    // REM: splash.style.opacity = '0';
                     resetAfterJump(); // Reset after the splash
-                }, 500);
+                }, 1000); // Extended splash duration
             }, 3000);
         }
 
@@ -271,8 +289,8 @@
             const jumpButton = document.getElementById('jumpButton');
             jumpButton.style.display = 'block';
             jumpButton.textContent = 'HYPPÄÄ';
-            const splash = document.getElementById('splash');
-            splash.style.animation = '';
+            // REM: const splash = document.getElementById('splash');
+            // REM: splash.style.animation = '';
             // Ei piiloteta nopeusnäyttöä
         }
 
@@ -291,14 +309,8 @@
         }
 
         function startTextAnimation() {
-            const text = `*** FREEFALL V 1.0 ***
-READY.
-
-
-
-
-
-
+            const text = `*** XTREME MODE ***
+NO 2MORO.
 `;
             typeWriter(text, 0, () => {
                 document.getElementById("content").style.display = "block";
@@ -307,6 +319,7 @@ READY.
 
         document.addEventListener("DOMContentLoaded", function() {
             startTextAnimation();
+            populateBuildingOptions();
         });
     </script>
 </body>
