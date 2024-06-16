@@ -158,6 +158,7 @@
                 </div>
             </div>
             <button onclick="laskeJaHyppaa()" id="jumpButton">HYPPÄÄ</button>
+            <button onclick="toggleExtremeMode()" id="extremeButton">EXTREME MODE</button>
         </div>
         <div class="line"></div>
         <div class="character" id="character"></div>
@@ -167,6 +168,7 @@
     </div>
     <script>
         const ships = {};
+        let extremeMode = false;
 
         fetch('ships.csv')
             .then(response => response.text())
@@ -225,6 +227,10 @@
                 jumpHeight += 1; // Lisää yksi metri jos seisotaan kaiteen päällä
             }
 
+            if (extremeMode) {
+                jumpHeight *= 1.5; // 50% higher jump in extreme mode
+            }
+
             const speedMPS = calculateSpeed(jumpHeight);
 
             startJumpAnimation(speedMPS, jumpHeight);
@@ -234,9 +240,11 @@
             const character = document.getElementById('character');
             const speedDisplay = document.getElementById('speedDisplay');
             const jumpButton = document.getElementById('jumpButton');
+            const extremeButton = document.getElementById('extremeButton');
             const splash = document.getElementById('splash');
 
             jumpButton.style.display = 'none';
+            extremeButton.style.display = 'none';
 
             const spinDuration = (Math.random() * 2 + 1) * 1000; // Random spin duration between 1 and 3 seconds
             const fallDuration = 3000; // 3 seconds fall duration
@@ -276,9 +284,21 @@
             const jumpButton = document.getElementById('jumpButton');
             jumpButton.style.display = 'block';
             jumpButton.textContent = 'HYPPÄÄ';
+            const extremeButton = document.getElementById('extremeButton');
+            extremeButton.style.display = 'block';
             const splash = document.getElementById('splash');
             splash.style.animation = '';
             // Ei piiloteta nopeusnäyttöä
+        }
+
+        function toggleExtremeMode() {
+            extremeMode = !extremeMode;
+            const extremeButton = document.getElementById('extremeButton');
+            if (extremeMode) {
+                extremeButton.textContent = 'EXTREME MODE ON';
+            } else {
+                extremeButton.textContent = 'EXTREME MODE';
+            }
         }
 
         function typeWriter(text, i, fnCallback, speed = 50) {
