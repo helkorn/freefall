@@ -83,11 +83,11 @@
             position: absolute;
             top: 0;
             right: 0;
-            width: 60px;
-            height: 66px;
-            background-image: url('sprites/monkey_sprite_1.png');
-            background-size: cover;
-            animation: turn 2000ms steps(6) infinite;
+            width: 20px;
+            height: 30px;
+            background-image: url('pixel_skeleton.png');
+            background-size: 96px 96px;
+            animation: turn 2000ms steps(8) infinite;
             filter: grayscale(100%);
         }
         .water {
@@ -109,7 +109,7 @@
         @keyframes fall {
             0% { top: 0; right: 0; }
             10% { top: -20px; right: 10px; } /* Simulate jump upwards and move slightly left */
-            100% { top: calc(100% - 50px - 66px); right: 50px; } /* Final position slightly left */
+            100% { top: calc(100% - 50px - 30px); right: 50px; } /* Final position slightly left */
         }
         @keyframes spin {
             0% { transform: rotate(0deg); }
@@ -125,13 +125,15 @@
             100% { opacity: 0; }
         }
         @keyframes turn {
-            0% { background-image: url('sprites/monkey_sprite_1.png'); }
-            16% { background-image: url('sprites/monkey_sprite_2.png'); }
-            32% { background-image: url('sprites/monkey_sprite_3.png'); }
-            50% { background-image: url('sprites/monkey_sprite_4.png'); }
-            66% { background-image: url('sprites/monkey_sprite_5.png'); }
-            83% { background-image: url('sprites/monkey_sprite_6.png'); }
-            100% { background-image: url('sprites/monkey_sprite_1.png'); }
+            0% { background-position: 16px 17px; }
+            12.5% { background-position: 47px 17px; }
+            25% { background-position: 82px 17px; }
+            37.5% { background-position: 18px 50px; }
+            50% { background-position: 49px 50px; }
+            62.5% { background-position: 81px 50px; }
+            75% { background-position: 17px 83px; }
+            87.5% { background-position: 49px 83px; }
+            100% { background-position: 16px 17px; }
         }
         .splash {
             position: absolute;
@@ -258,7 +260,7 @@
 
         function resetAfterJump() {
             const character = document.getElementById('character');
-            character.style.animation = 'turn 2000ms steps(6) infinite'; // Restart turning animation
+            character.style.animation = 'turn 2000ms steps(8) infinite'; // Restart turning animation
             const jumpButton = document.getElementById('jumpButton');
             jumpButton.style.display = 'block';
             jumpButton.textContent = 'HYPPÄÄ';
@@ -303,4 +305,3 @@ READY.
     </script>
 </body>
 </html>
-
