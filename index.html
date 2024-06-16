@@ -97,7 +97,7 @@
             font-size: 1.5em;
             color: #444444; /* Change to darker color */
         }
-        @keyframes fall {
+        @keyframes jumpAndFall {
             0% { top: 0; right: 0; }
             10% { top: -20px; right: 10px; } /* Simulate jump upwards and move slightly left */
             100% { top: calc(100% - 50px - 66px); right: 50px; } /* Final position slightly left */
@@ -105,11 +105,6 @@
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
-        }
-        @keyframes showSpeed {
-            to {
-                opacity: 1;
-            }
         }
         @keyframes splash {
             0% { opacity: 1; }
@@ -245,26 +240,30 @@
 
             const spinDuration = (Math.random() * 2 + 1) * 1000; // Random spin duration between 1 and 3 seconds
             const fallDuration = 3000; // 3 seconds fall duration
-            const startTime = performance.now();
+            const startFallTime = performance.now() + (fallDuration * 0.1); // Start speed measurement after 10% of the fall duration
 
-            character.style.animation = `fall ${fallDuration}ms ease-in, spin ${spinDuration}ms linear`;
+            character.style.animation = `jumpAndFall ${fallDuration}ms ease-in, spin ${spinDuration}ms linear`;
 
             function updateSpeedDisplay(time) {
-                const elapsed = time - startTime;
-                const elapsedSeconds = elapsed / 1000;
-                const currentSpeedMPS = Math.min(speedMPS, speedMPS * (elapsedSeconds / (fallDuration / 1000)));
-                const currentSpeedKPH = (currentSpeedMPS * 3.6).toFixed(2);
-                speedDisplay.textContent = `${currentSpeedKPH} km/h`;
+                if (time >= startFallTime) {
+                    const elapsed = time - startFallTime;
+                    const elapsedSeconds = elapsed / 1000;
+                    const currentSpeedMPS = Math.min(speedMPS, speedMPS * (elapsedSeconds / (fallDuration / 1000)));
+                    const currentSpeedKPH = (currentSpeedMPS * 3.6).toFixed(2);
+                    speedDisplay.textContent = `${currentSpeedKPH} km/h`;
 
-                if (elapsed < fallDuration) {
-                    requestAnimationFrame(updateSpeedDisplay);
+                    if (elapsed < fallDuration * 0.9) {
+                        requestAnimationFrame(updateSpeedDisplay);
+                    } else {
+                        speedDisplay.textContent = `${(speedMPS * 3.6).toFixed(2)} km/h`;
+                        splash.style.animation = 'splash 500ms ease-in-out';
+                        setTimeout(() => {
+                            splash.style.opacity = '0';
+                            resetAfterJump(); // Reset after the splash
+                        }, 500);
+                    }
                 } else {
-                    speedDisplay.textContent = `${(speedMPS * 3.6).toFixed(2)} km/h`;
-                    splash.style.animation = 'splash 500ms ease-in-out';
-                    setTimeout(() => {
-                        splash.style.opacity = '0';
-                        resetAfterJump(); // Reset after the splash
-                    }, 500);
+                    requestAnimationFrame(updateSpeedDisplay);
                 }
             }
 
