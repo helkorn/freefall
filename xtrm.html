@@ -82,11 +82,11 @@
         }
         .character {
             position: absolute;
-            top: 10px;
+            top: 0;
             right: 60px; /* Moved 100px to the left */
-            width: 32px;
+            width: 60px;
             height: 66px;
-            background-image: url('kekkonen.png');
+            background-image: url('sprites/monkey_sprite_1.png');
             background-size: cover;
             animation: turn 2000ms steps(6) infinite;
             filter: grayscale(100%);
@@ -133,33 +133,15 @@
         }
         /* REM: @keyframes splash { 0% { opacity: 1; } 100% { opacity: 0; } } */
         @keyframes turn {
-            0% { background-image: url('kekkonen.png'); }
-            16% { background-image: url('kekkonen.png'); }
-            32% { background-image: url('kekkonen.png'); }
-            50% { background-image: url('kekkonen.png'); }
-            66% { background-image: url('kekkonen.png'); }
-            83% { background-image: url('kekkonen.png'); }
-            100% { background-image: url('kekkonen.png'); }
-        }
-        .platform {
-            position: absolute;
-            top: 76px;
-            right: 60px;
-            width: 50px;
-            height: 10px;
-            background-color: white;
+            0% { background-image: url('sprites/monkey_sprite_1.png'); }
+            16% { background-image: url('sprites/monkey_sprite_2.png'); }
+            32% { background-image: url('sprites/monkey_sprite_3.png'); }
+            50% { background-image: url('sprites/monkey_sprite_4.png'); }
+            66% { background-image: url('sprites/monkey_sprite_5.png'); }
+            83% { background-image: url('sprites/monkey_sprite_6.png'); }
+            100% { background-image: url('sprites/monkey_sprite_1.png'); }
         }
         /* REM: .splash { position: absolute; width: 100px; height: 100px; top: calc(100% - 200px); left: calc(50% - 50px); background-image: url('splash.svg'); background-size: contain; background-repeat: no-repeat; opacity: 0; filter: grayscale(100%); } */
-        .logo {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            width: 50px;
-            height: auto;
-            background-image: url('xtrm_mode.png');
-            background-size: contain;
-            background-repeat: no-repeat;
-        }
     </style>
 </head>
 <body>
@@ -185,11 +167,9 @@
         <div class="skyscraper"></div> <!-- Added skyscraper element -->
         <div class="line"></div>
         <div class="character" id="character"></div>
-        <div class="platform"></div>
         <div class="road"></div>
         <div class="speed-display" id="speedDisplay">0 km/h</div>
         <!-- REM: <div class="splash" id="splash"></div> -->
-        <div class="logo"></div>
     </div>
     <script>
         const buildings = {
@@ -324,4 +304,3 @@ NO 2MORO.
     </script>
 </body>
 </html>
-
