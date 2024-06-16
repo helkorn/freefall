@@ -153,7 +153,7 @@
             height: 100px;
             top: calc(100% - 200px);
             left: calc(50% - 50px);
-            background-image: url('splash.svg');
+            background-image: url('splash.png');
             background-size: contain;
             background-repeat: no-repeat;
             opacity: 0;
@@ -166,12 +166,30 @@
             background-image: url('jet.png');
             background-size: contain;
             background-repeat: no-repeat;
+            display: none;
         }
-        .pixels {
+        .broken {
             position: absolute;
-            background-color: white;
-            width: 2px;
-            height: 2px;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2em;
+            color: red;
+            z-index: 10;
+        }
+        video.fullscreen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 20;
         }
     </style>
 </head>
@@ -210,7 +228,7 @@
             "Näsinneula": { floors: 1, heights: [120] },
             "Olympiastadionin torni": { floors: 1, heights: [72] },
             "Kuopion Puijon torni": { floors: 1, heights: [75] },
-            "Turun tuomiokirkon kello": { floors: 1, heights: [101] },
+            "Turun tuomiokirkko": { floors: 1, heights: [101] },
             "Vapaudenpatsas": { floors: 1, heights: [93] },
             "Eiffel-torni": { floors: 3, heights: [57, 115, 276] }
         };
@@ -300,32 +318,38 @@
 
         function startPlaneAnimation() {
             const plane = document.getElementById('plane');
-            const skyscraper = document.getElementById('skyscraper');
-            const character = document.getElementById('character');
-
             plane.style.display = 'block';
             plane.style.animation = 'planeFly 5s linear';
 
             setTimeout(() => {
-                explode(skyscraper);
-                explode(character);
-                explode(plane);
-                setTimeout(resetAfterJump, 2000); // Delay before resetting
+                showBrokenMessage();
+                setTimeout(playVideo, 2000); // Delay before playing video
             }, 5000); // Time for plane to reach skyscraper
         }
 
-        function explode(element) {
-            element.style.display = 'none';
-            for (let i = 0; i < 100; i++) {
-                const pixel = document.createElement('div');
-                pixel.classList.add('pixels');
-                pixel.style.top = `${element.offsetTop + Math.random() * element.offsetHeight}px`;
-                pixel.style.left = `${element.offsetLeft + Math.random() * element.offsetWidth}px`;
-                document.body.appendChild(pixel);
-            }
+        function showBrokenMessage() {
+            const brokenMessage = document.createElement('div');
+            brokenMessage.className = 'broken';
+            brokenMessage.textContent = 'All systems failed...';
+            document.body.appendChild(brokenMessage);
+        }
+
+        function playVideo() {
+            const video = document.createElement('video');
+            video.className = 'fullscreen';
+            video.src = 'NagarJuna_Cement.mp4';
+            video.autoplay = true;
+            video.onended = resetAfterJump;
+            document.body.appendChild(video);
         }
 
         function resetAfterJump() {
+            const brokenMessage = document.querySelector('.broken');
+            if (brokenMessage) brokenMessage.remove();
+
+            const video = document.querySelector('.fullscreen');
+            if (video) video.remove();
+
             const pixels = document.querySelectorAll('.pixels');
             pixels.forEach(pixel => pixel.remove());
 
@@ -382,3 +406,4 @@ Version 1.2: No 2moro
     </script>
 </body>
 </html>
+
