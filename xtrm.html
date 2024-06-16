@@ -115,7 +115,7 @@
             bottom: 10px;
             left: 10px;
             font-size: 1.5em;
-            color: #FF0000;
+            color: #FFFFFF; /* Changed color to white */
         }
         @keyframes fall {
             0% { top: 0; right: 60px; } /* Adjusted starting position */
@@ -131,7 +131,6 @@
                 opacity: 1;
             }
         }
-        /* REM: @keyframes splash { 0% { opacity: 1; } 100% { opacity: 0; } } */
         @keyframes turn {
             0% { background-image: url('sprites/monkey_sprite_1.png'); }
             16% { background-image: url('sprites/monkey_sprite_2.png'); }
@@ -141,7 +140,6 @@
             83% { background-image: url('sprites/monkey_sprite_6.png'); }
             100% { background-image: url('sprites/monkey_sprite_1.png'); }
         }
-        /* REM: .splash { position: absolute; width: 100px; height: 100px; top: calc(100% - 200px); left: calc(50% - 50px); background-image: url('splash.svg'); background-size: contain; background-repeat: no-repeat; opacity: 0; filter: grayscale(100%); } */
     </style>
 </head>
 <body>
@@ -154,6 +152,7 @@
                     <!-- Rakennukset täytetään JavaScriptillä -->
                 </select>
             </div>
+            <div style="height: 40px;"></div> <!-- Added space to move down -->
             <div class="selection-container">
                 <div>
                     <label for="level">Taso:</label>
@@ -169,7 +168,6 @@
         <div class="character" id="character"></div>
         <div class="road"></div>
         <div class="speed-display" id="speedDisplay">0 km/h</div>
-        <!-- REM: <div class="splash" id="splash"></div> -->
     </div>
     <script>
         const buildings = {
@@ -220,8 +218,16 @@
 
         function calculateSpeed(height) {
             const g = 9.81; // Painovoiman kiihtyvyys m/s^2
-            const speed = Math.sqrt(2 * g * height); // Lasketaan nopeus m/s
-            return (speed * 3.6).toFixed(2); // Muutetaan nopeus km/h
+            let speed = Math.sqrt(2 * g * height); // Lasketaan nopeus m/s
+            speed = speed * 3.6; // Muutetaan nopeus km/h
+            
+            // Random +/- 5% variation
+            const variation = (Math.random() * 0.1 - 0.05) * speed;
+            speed = speed + variation;
+
+            // Cap speed at terminal velocity (~190 km/h)
+            const terminalVelocity = 190;
+            return Math.min(speed, terminalVelocity).toFixed(2); 
         }
 
         function laskeJaHyppaa() {
@@ -244,7 +250,6 @@
             const character = document.getElementById('character');
             const speedDisplay = document.getElementById('speedDisplay');
             const jumpButton = document.getElementById('jumpButton');
-            // REM: const splash = document.getElementById('splash');
 
             jumpButton.style.display = 'none';
 
@@ -255,11 +260,9 @@
             setTimeout(() => {
                 speedDisplay.textContent = `${speedKmH} km/h`;
                 speedDisplay.style.opacity = '1';
-                // REM: splash.style.animation = 'splash 1000ms ease-in-out'; // Extended splash duration
                 setTimeout(() => {
-                    // REM: splash.style.opacity = '0';
-                    resetAfterJump(); // Reset after the splash
-                }, 1000); // Extended splash duration
+                    resetAfterJump(); // Reset after the display
+                }, 1000);
             }, 3000);
         }
 
@@ -269,9 +272,6 @@
             const jumpButton = document.getElementById('jumpButton');
             jumpButton.style.display = 'block';
             jumpButton.textContent = 'HYPPÄÄ';
-            // REM: const splash = document.getElementById('splash');
-            // REM: splash.style.animation = '';
-            // Ei piiloteta nopeusnäyttöä
         }
 
         function typeWriter(text, i, fnCallback, speed = 50) {
