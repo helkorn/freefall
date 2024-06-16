@@ -11,7 +11,7 @@
         }
         body {
             font-family: 'C64', monospace;
-            background-color: #000000;
+            background: linear-gradient(to top, black, #0000FF);
             color: #FFFFFF;
             margin: 0;
             padding: 0;
@@ -21,6 +21,16 @@
             height: 100vh;
             overflow: hidden;
             filter: grayscale(100%);
+        }
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to top, black, #0000FF);
+            z-index: 0;
         }
         .container {
             position: relative;
@@ -33,6 +43,8 @@
             box-sizing: border-box;
             border: 4px solid #FF0000;
             animation: borderAnimation 2s infinite;
+            filter: none; /* Poista suodatin vain reunoille */
+            z-index: 1;
         }
         @keyframes borderAnimation {
             0% { border-color: #FF0000; }
@@ -53,6 +65,10 @@
             flex-direction: column;
             align-items: flex-start;
         }
+        .selection-container label {
+            display: block;
+            margin-bottom: 10px; /* Lisää tyhjä väli */
+        }
         select {
             background: black;
             color: #FFFFFF;
@@ -70,14 +86,6 @@
             font-size: 16px;
             cursor: pointer;
             margin-top: 10px;
-        }
-        .line {
-            position: absolute;
-            top: 66px;
-            right: 0;
-            width: 40px; /* Reduced to 80% */
-            height: 10px;
-            background: white;
         }
         .character {
             position: absolute;
@@ -100,13 +108,13 @@
             background-size: contain;
             background-repeat: repeat-y; /* Repeats the image vertically */
         }
-        .water {
+        .cityline {
             position: absolute;
             bottom: 0;
             left: 0;
             width: 100%;
             height: 100px;
-            background: url('water_texture.png') repeat-x;
+            background: url('cityline.png') repeat-x;
             filter: grayscale(100%);
         }
         .speed-display {
@@ -178,9 +186,8 @@
             <button onclick="laskeJaHyppaa()" id="jumpButton">HYPPÄÄ</button>
         </div>
         <div class="skyscraper"></div> <!-- Added skyscraper element -->
-        <div class="line"></div>
         <div class="character" id="character"></div>
-        <div class="water"></div>
+        <div class="cityline"></div> <!-- Changed water to cityline -->
         <div class="speed-display" id="speedDisplay">0 km/h</div>
         <div class="splash" id="splash"></div>
     </div>
@@ -314,3 +321,4 @@ READY.
     </script>
 </body>
 </html>
+
