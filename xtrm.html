@@ -116,6 +116,22 @@
             font-size: 1.5em;
             color: #FF0000;
         }
+        .plane {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 60px;
+            height: 60px;
+            background-image: url('jet.png');
+            background-size: cover;
+            transform: rotate(45deg);
+        }
+        @keyframes planeFly {
+            0% { top: 0; left: 0; }
+            50% { top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(45deg); }
+            55% { top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(225deg); }
+            100% { top: 0; left: 100%; }
+        }
         @keyframes fall {
             0% { top: 0; right: 60px; } /* Adjusted starting position */
             10% { top: -20px; right: 70px; } /* Adjusted to move slightly left */
@@ -155,6 +171,13 @@
             opacity: 0;
             filter: grayscale(100%);
         }
+        .video-container {
+            display: none;
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            width: 300px;
+        }
     </style>
 </head>
 <body>
@@ -162,7 +185,7 @@
         <div id="output"></div>
         <div id="content" class="content">
             <div>
-                <label for="building">Valitse rakennus:</label>
+                <label for="building">Rakennus:</label>
                 <select id="building" onchange="updateLevels()">
                     <!-- Rakennukset täytetään JavaScriptillä -->
                 </select>
@@ -176,10 +199,17 @@
                 </div>
             </div>
             <button onclick="laskeJaHyppaa()" id="jumpButton">HYPPÄÄ</button>
+            <div class="video-container" id="videoContainer">
+                <video width="300" controls>
+                    <source src="NagarJuna_Cement.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
         </div>
         <div class="skyscraper"></div> <!-- Added skyscraper element -->
         <div class="line"></div>
         <div class="character" id="character"></div>
+        <div class="plane" id="plane"></div>
         <div class="water"></div>
         <div class="speed-display" id="speedDisplay">0 km/h</div>
         <div class="splash" id="splash"></div>
@@ -188,7 +218,7 @@
         const buildings = {
             "Taipei 101": { floors: 101, heights: [] },
             "Burj Khalifa": { floors: 163, heights: [] },
-            "One World Trade Center": { floors: 104, heights: [] },
+            "World Trade Center": { floors: 104, heights: [] },
             "Näsinneula": { floors: 1, heights: [120] },
             "Olympiastadionin torni": { floors: 1, heights: [72] },
             "Kuopion Puijon torni": { floors: 1, heights: [75] },
@@ -239,6 +269,12 @@
 
         function laskeJaHyppaa() {
             const buildingChoice = document.getElementById('building').value;
+            if (buildingChoice === "World Trade Center") {
+                playPlaneAnimation();
+                document.getElementById('videoContainer').style.display = 'block';
+                return;
+            }
+
             const building = buildings[buildingChoice];
             let selectedHeight;
 
@@ -287,6 +323,14 @@
             // Ei piiloteta nopeusnäyttöä
         }
 
+        function playPlaneAnimation() {
+            const plane = document.getElementById('plane');
+            plane.style.animation = 'planeFly 5s linear';
+            setTimeout(() => {
+                plane.style.animation = '';
+            }, 5000);
+        }
+
         function typeWriter(text, i, fnCallback, speed = 50) {
             if (i < text.length) {
                 const char = text.charAt(i);
@@ -302,14 +346,8 @@
         }
 
         function startTextAnimation() {
-            const text = `*** FREEFALL V 1.0 ***
-READY.
-
-
-
-
-
-
+            const text = `*** XTREME MODE ***
+NO 2MORO.
 `;
             typeWriter(text, 0, () => {
                 document.getElementById("content").style.display = "block";
@@ -323,3 +361,4 @@ READY.
     </script>
 </body>
 </html>
+
