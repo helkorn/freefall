@@ -79,18 +79,10 @@
             cursor: pointer;
             margin-top: 10px;
         }
-        .line {
-            position: absolute;
-            top: 66px;
-            right: 0;
-            width: 40px; /* Reduced to 80% */
-            height: 10px;
-            background: white;
-        }
         .character {
             position: absolute;
             top: 0;
-            right: 60px; /* Moved 100px to the left */
+            right: 60px;
             width: 60px;
             height: 66px;
             background-image: url('sprites/monkey_sprite_1.png');
@@ -102,11 +94,11 @@
             position: absolute;
             top: 0;
             right: 0;
-            width: 100px; /* Set width to 100px */
-            height: 100%; /* Full height */
+            width: 100px;
+            height: 100%;
             background-image: url('skyscraper.png');
             background-size: contain;
-            background-repeat: repeat-y; /* Repeats the image vertically */
+            background-repeat: repeat-y;
         }
         .street {
             position: absolute;
@@ -125,9 +117,9 @@
             color: #FFFFFF;
         }
         @keyframes fall {
-            0% { top: 0; right: 60px; } /* Adjusted starting position */
-            10% { top: -20px; right: 70px; } /* Adjusted to move slightly left */
-            100% { top: calc(100% - 50px - 66px); right: 110px; } /* Adjusted final position */
+            0% { top: 0; right: 60px; }
+            10% { top: -20px; right: 70px; }
+            100% { top: calc(100% - 50px - 66px); right: 110px; }
         }
         @keyframes spin {
             0% { transform: rotate(0deg); }
@@ -151,6 +143,10 @@
             83% { background-image: url('sprites/monkey_sprite_6.png'); }
             100% { background-image: url('sprites/monkey_sprite_1.png'); }
         }
+        @keyframes planeFly {
+            0% { left: -100px; top: 50px; }
+            100% { left: calc(100% - 100px); top: 200px; }
+        }
         .splash {
             position: absolute;
             width: 100px;
@@ -162,6 +158,20 @@
             background-repeat: no-repeat;
             opacity: 0;
             filter: grayscale(100%);
+        }
+        .plane {
+            position: absolute;
+            width: 100px;
+            height: 50px;
+            background-image: url('jet.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+        }
+        .pixels {
+            position: absolute;
+            background-color: white;
+            width: 2px;
+            height: 2px;
         }
     </style>
 </head>
@@ -185,12 +195,12 @@
             </div>
             <button onclick="laskeJaHyppaa()" id="jumpButton">HYPPÄÄ</button>
         </div>
-        <div class="skyscraper"></div> <!-- Added skyscraper element -->
-        <div class="line"></div>
+        <div class="skyscraper" id="skyscraper"></div>
         <div class="character" id="character"></div>
         <div class="street"></div>
         <div class="speed-display" id="speedDisplay">0 km/h</div>
         <div class="splash" id="splash"></div>
+        <div class="plane" id="plane"></div>
     </div>
     <script>
         const buildings = {
@@ -257,8 +267,12 @@
                 selectedHeight = parseInt(document.getElementById('level').value);
             }
 
-            const speedKmH = calculateSpeed(selectedHeight);
-            startJumpAnimation(speedKmH);
+            if (buildingChoice === "One World Trade Center") {
+                startPlaneAnimation();
+            } else {
+                const speedKmH = calculateSpeed(selectedHeight);
+                startJumpAnimation(speedKmH);
+            }
         }
 
         function startJumpAnimation(speedKmH) {
@@ -284,15 +298,52 @@
             }, 3000);
         }
 
-        function resetAfterJump() {
+        function startPlaneAnimation() {
+            const plane = document.getElementById('plane');
+            const skyscraper = document.getElementById('skyscraper');
             const character = document.getElementById('character');
-            character.style.animation = 'turn 2000ms steps(6) infinite'; // Restart turning animation
+
+            plane.style.display = 'block';
+            plane.style.animation = 'planeFly 5s linear';
+
+            setTimeout(() => {
+                explode(skyscraper);
+                explode(character);
+                explode(plane);
+                setTimeout(resetAfterJump, 2000); // Delay before resetting
+            }, 5000); // Time for plane to reach skyscraper
+        }
+
+        function explode(element) {
+            element.style.display = 'none';
+            for (let i = 0; i < 100; i++) {
+                const pixel = document.createElement('div');
+                pixel.classList.add('pixels');
+                pixel.style.top = `${element.offsetTop + Math.random() * element.offsetHeight}px`;
+                pixel.style.left = `${element.offsetLeft + Math.random() * element.offsetWidth}px`;
+                document.body.appendChild(pixel);
+            }
+        }
+
+        function resetAfterJump() {
+            const pixels = document.querySelectorAll('.pixels');
+            pixels.forEach(pixel => pixel.remove());
+
+            const character = document.getElementById('character');
             const jumpButton = document.getElementById('jumpButton');
+            const plane = document.getElementById('plane');
+            const skyscraper = document.getElementById('skyscraper');
+
+            character.style.display = 'block';
+            character.style.animation = 'turn 2000ms steps(6) infinite'; // Restart turning animation
+
+            plane.style.display = 'none';
+            plane.style.animation = '';
+
+            skyscraper.style.display = 'block';
+
             jumpButton.style.display = 'block';
             jumpButton.textContent = 'HYPPÄÄ';
-            const splash = document.getElementById('splash');
-            splash.style.animation = '';
-            // Ei piiloteta nopeusnäyttöä
         }
 
         function typeWriter(text, i, fnCallback, speed = 50) {
