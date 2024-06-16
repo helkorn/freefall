@@ -131,14 +131,21 @@
                 opacity: 1;
             }
         }
-        @keyframes turn {
-            0% { background-image: url('sprites/monkey_sprite_1.png'); }
-            16% { background-image: url('sprites/monkey_sprite_2.png'); }
-            32% { background-image: url('sprites/monkey_sprite_3.png'); }
-            50% { background-image: url('sprites/monkey_sprite_4.png'); }
-            66% { background-image: url('sprites/monkey_sprite_5.png'); }
-            83% { background-image: url('sprites/monkey_sprite_6.png'); }
-            100% { background-image: url('sprites/monkey_sprite_1.png'); }
+        @keyframes splash {
+            0% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+        .splash {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            top: calc(100% - 200px);
+            left: calc(50% - 50px);
+            background-image: url('bloodyhell.svg'); /* Updated to use bloodyhell.svg */
+            background-size: contain;
+            background-repeat: no-repeat;
+            opacity: 0;
+            filter: grayscale(100%);
         }
     </style>
 </head>
@@ -168,6 +175,7 @@
         <div class="character" id="character"></div>
         <div class="road"></div>
         <div class="speed-display" id="speedDisplay">0 km/h</div>
+        <div class="splash" id="splash"></div> <!-- Added splash element -->
     </div>
     <script>
         const buildings = {
@@ -250,6 +258,7 @@
             const character = document.getElementById('character');
             const speedDisplay = document.getElementById('speedDisplay');
             const jumpButton = document.getElementById('jumpButton');
+            const splash = document.getElementById('splash');
 
             jumpButton.style.display = 'none';
 
@@ -260,8 +269,10 @@
             setTimeout(() => {
                 speedDisplay.textContent = `${speedKmH} km/h`;
                 speedDisplay.style.opacity = '1';
+                splash.style.animation = 'splash 1000ms ease-in-out'; // Splash animation
                 setTimeout(() => {
-                    resetAfterJump(); // Reset after the display
+                    splash.style.opacity = '0';
+                    resetAfterJump(); // Reset after the splash
                 }, 1000);
             }, 3000);
         }
@@ -272,6 +283,9 @@
             const jumpButton = document.getElementById('jumpButton');
             jumpButton.style.display = 'block';
             jumpButton.textContent = 'HYPPÄÄ';
+            const splash = document.getElementById('splash');
+            splash.style.animation = '';
+            // Ei piiloteta nopeusnäyttöä
         }
 
         function typeWriter(text, i, fnCallback, speed = 50) {
