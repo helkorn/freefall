@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Freefall - Extreme Mode</title>
+    <title>XTREME MODE</title>
     <style>
         @font-face {
             font-family: 'C64';
@@ -31,7 +31,7 @@
             background-color: #0000FF;
             padding: 20px;
             box-sizing: border-box;
-            border: 4px solid #FF0000;
+            border: 4px solid;
             animation: borderAnimation 2s infinite;
         }
         @keyframes borderAnimation {
@@ -116,22 +116,6 @@
             font-size: 1.5em;
             color: #FF0000;
         }
-        .plane {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 60px;
-            height: 60px;
-            background-image: url('jet.png');
-            background-size: cover;
-            transform: rotate(45deg);
-        }
-        @keyframes planeFly {
-            0% { top: 0; left: 0; }
-            50% { top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(45deg); }
-            55% { top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(225deg); }
-            100% { top: 0; left: 100%; }
-        }
         @keyframes fall {
             0% { top: 0; right: 60px; } /* Adjusted starting position */
             10% { top: -20px; right: 70px; } /* Adjusted to move slightly left */
@@ -171,13 +155,6 @@
             opacity: 0;
             filter: grayscale(100%);
         }
-        .video-container {
-            display: none;
-            position: absolute;
-            bottom: 10px;
-            right: 10px;
-            width: 300px;
-        }
     </style>
 </head>
 <body>
@@ -199,17 +176,10 @@
                 </div>
             </div>
             <button onclick="laskeJaHyppaa()" id="jumpButton">HYPPÄÄ</button>
-            <div class="video-container" id="videoContainer">
-                <video width="300" controls>
-                    <source src="NagarJuna_Cement.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                </video>
-            </div>
         </div>
         <div class="skyscraper"></div> <!-- Added skyscraper element -->
         <div class="line"></div>
         <div class="character" id="character"></div>
-        <div class="plane" id="plane"></div>
         <div class="water"></div>
         <div class="speed-display" id="speedDisplay">0 km/h</div>
         <div class="splash" id="splash"></div>
@@ -269,12 +239,6 @@
 
         function laskeJaHyppaa() {
             const buildingChoice = document.getElementById('building').value;
-            if (buildingChoice === "World Trade Center") {
-                playPlaneAnimation();
-                document.getElementById('videoContainer').style.display = 'block';
-                return;
-            }
-
             const building = buildings[buildingChoice];
             let selectedHeight;
 
@@ -323,14 +287,6 @@
             // Ei piiloteta nopeusnäyttöä
         }
 
-        function playPlaneAnimation() {
-            const plane = document.getElementById('plane');
-            plane.style.animation = 'planeFly 5s linear';
-            setTimeout(() => {
-                plane.style.animation = '';
-            }, 5000);
-        }
-
         function typeWriter(text, i, fnCallback, speed = 50) {
             if (i < text.length) {
                 const char = text.charAt(i);
@@ -361,4 +317,3 @@ NO 2MORO.
     </script>
 </body>
 </html>
-
