@@ -130,9 +130,9 @@
                 opacity: 1;
             }
         }
-        @keyframes splash {
-            0% { opacity: 1; }
-            100% { opacity: 0; }
+        @keyframes ascend {
+            0% { top: calc(100% - 200px); opacity: 1; }
+            100% { top: -100px; opacity: 1; }
         }
         @keyframes turn {
             0% { background-image: url('sprites/monkey_sprite_1.png'); }
@@ -156,8 +156,9 @@
             background-image: url('skeleton.png');
             background-size: contain;
             background-repeat: no-repeat;
-            opacity: 0;
+            opacity: 1;
             filter: grayscale(100%);
+            animation: ascend 3s ease-in-out;
         }
         .plane {
             position: absolute;
@@ -344,11 +345,10 @@
             setTimeout(() => {
                 speedDisplay.textContent = `${speedKmH} km/h`;
                 speedDisplay.style.opacity = '1';
-                splash.style.animation = 'splash 1000ms ease-in-out'; // Extended splash duration
+                splash.style.opacity = '1';
                 setTimeout(() => {
-                    splash.style.opacity = '0';
                     resetAfterJump(); // Reset after the splash
-                }, 1000); // Extended splash duration
+                }, 3000); // Extended splash duration
             }, 3000);
         }
 
@@ -442,3 +442,4 @@ no 2moro
     </script>
 </body>
 </html>
+
