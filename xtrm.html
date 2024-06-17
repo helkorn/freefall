@@ -1,11 +1,10 @@
 <!DOCTYPE html>
-
 <html lang="fi">
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Freefall - Extreme Mode</title>
-<style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Freefall - Extreme Mode</title>
+    <style>
         @font-face {
             font-family: 'C64';
             src: url('fonts/fontC64.ttf') format('truetype');
@@ -195,34 +194,96 @@
     </style>
 </head>
 <body>
-<div class="container">
-<div id="output"></div>
-<div class="content" id="content">
-<div>
-<label for="building">Rakennus:</label>
-<select id="building" onchange="updateLevels()">
-<!-- Rakennukset täytetään JavaScriptillä -->
-</select>
-</div>
-<div class="selection-container">
-<div>
-<label for="level">Taso:</label>
-<select id="level">
-<!-- Tasot täytetään JavaScriptillä -->
-</select>
-</div>
-</div>
-<button id="jumpButton" onclick="laskeJaHyppaa()">HYPPÄÄ</button>
-</div>
-<div class="skyscraper" id="skyscraper"></div>
-<div class="character" id="character"></div>
-<div class="street"></div>
-<div class="speed-display" id="speedDisplay">0 km/h</div>
-<div class="splash" id="splash"></div>
-<div class="plane" id="plane"></div>
-</div>
-<script>
-        const buildings = {Big Ben:  {floors:  6,  heights:  [12,  35,  55,  61,  84,  93]},  Eiffel-torni:  {floors:  6,  heights:  [57,  115,  200,  276,  276,  330]},  Empire State Building:  {floors:  102,  heights:  []},  Gizan pyramidi:  {floors:  2,  heights:  [17,  139]},  Kuopion Puijon torni:  {floors:  3,  heights:  [16,  44,  75]},  Olympiastadionin torni:  {floors:  1,  heights:  [72]},  One World Trade Center:  {floors:  104,  heights:  []},  Tampereen N\u00e4sinneula:  {floors:  4,  heights:  [120,  124,  135,  168]},  Turun tuomiokirkko:  {floors:  6,  heights:  [10,  18,  40,  50,  85,  101]},  Vapaudenpatsas:  {floors:  3,  heights:  [27,  47,  93]}};
+    <div class="container">
+        <div id="output"></div>
+        <div id="content" class="content">
+            <div>
+                <label for="building">Rakennus:</label>
+                <select id="building" onchange="updateLevels()">
+                    <!-- Rakennukset täytetään JavaScriptillä -->
+                </select>
+            </div>
+            <div class="selection-container">
+                <div>
+                    <label for="level">Taso:</label>
+                    <select id="level">
+                        <!-- Tasot täytetään JavaScriptillä -->
+                    </select>
+                </div>
+            </div>
+            <button onclick="laskeJaHyppaa()" id="jumpButton">HYPPÄÄ</button>
+        </div>
+        <div class="skyscraper" id="skyscraper"></div>
+        <div class="character" id="character"></div>
+        <div class="street"></div>
+        <div class="speed-display" id="speedDisplay">0 km/h</div>
+        <div class="splash" id="splash"></div>
+        <div class="plane" id="plane"></div>
+    </div>
+    <script>
+        const buildings = {
+            "Big Ben": {
+                floors: 6, heights: [
+                    { name: "Ground Floor", height: 12 },
+                    { name: "Service Room", height: 35 },
+                    { name: "Clock Room", height: 55 },
+                    { name: "Belfry", height: 61 },
+                    { name: "Maintenance Level", height: 84 },
+                    { name: "Uppermost Windows", height: 93 }
+                ]
+            },
+            "Eiffel-torni": {
+                floors: 6, heights: [
+                    { name: "Näyttelyt", height: 57 },
+                    { name: "Ravintolat", height: 115 },
+                    { name: "Huoltokerrokset", height: 200 },
+                    { name: "Näköalatasanne", height: 276 },
+                    { name: "Ylin taso", height: 276 },
+                    { name: "Antennitaso", height: 330 }
+                ]
+            },
+            "Empire State Building": { floors: 102, heights: [] },
+            "Gizan pyramidi": {
+                floors: 2, heights: [
+                    { name: "Ascending Passage", height: 17 },
+                    { name: "Summit", height: 139 }
+                ]
+            },
+            "Kuopion Puijon torni": {
+                floors: 3, heights: [
+                    { name: "Ravintolat", height: 16 },
+                    { name: "Panoraamaikkunat", height: 44 },
+                    { name: "Näköalataso", height: 75 }
+                ]
+            },
+            "Olympiastadionin torni": { floors: 1, heights: [72] },
+            "One World Trade Center": { floors: 104, heights: [] },
+            "Tampereen Näsinneula": {
+                floors: 4, heights: [
+                    { name: "Näköalataso", height: 120 },
+                    { name: "Pyörivä ravintola", height: 124 },
+                    { name: "Huoltotaso", height: 135 },
+                    { name: "Antennitaso", height: 168 }
+                ]
+            },
+            "Turun tuomiokirkko": {
+                floors: 6, heights: [
+                    { name: "Parvi", height: 10 },
+                    { name: "Huoltotilat", height: 18 },
+                    { name: "Kellon huoltotaso", height: 40 },
+                    { name: "Kellotapuli", height: 50 },
+                    { name: "Huoltoluukut", height: 85 },
+                    { name: "Tornin huippu", height: 101 }
+                ]
+            },
+            "Vapaudenpatsas": {
+                floors: 3, heights: [
+                    { name: "Pedestal Museum", height: 27 },
+                    { name: "Observation Deck", height: 47 },
+                    { name: "Torch Observation Deck", height: 93 }
+                ]
+            }
+        };
 
         function populateBuildingOptions() {
             const buildingSelect = document.getElementById('building');
@@ -241,21 +302,12 @@
             const levelSelect = document.getElementById('level');
             levelSelect.innerHTML = '';
 
-            if (building.floors > 1) {
-                for (let i = 1; i <= building.floors; i++) {
-                    const option = document.createElement('option');
-                    option.value = i;
-                    option.text = `Kerros ${i}`;
-                    levelSelect.appendChild(option);
-                }
-            } else {
-                building.heights.forEach(height => {
-                    const option = document.createElement('option');
-                    option.value = height;
-                    option.text = `Näköalataso ${height} m`;
-                    levelSelect.appendChild(option);
-                });
-            }
+            building.heights.forEach(level => {
+                const option = document.createElement('option');
+                option.value = level.height;
+                option.text = `${level.name} ${level.height} m`;
+                levelSelect.appendChild(option);
+            });
         }
 
         function calculateSpeed(height) {
@@ -267,14 +319,7 @@
         function laskeJaHyppaa() {
             const buildingChoice = document.getElementById('building').value;
             const building = buildings[buildingChoice];
-            let selectedHeight;
-
-            if (building.floors > 1) {
-                const selectedFloor = parseInt(document.getElementById('level').value);
-                selectedHeight = selectedFloor * 3; // Arvioitu korkeus kerroksille
-            } else {
-                selectedHeight = parseInt(document.getElementById('level').value);
-            }
+            const selectedHeight = parseInt(document.getElementById('level').value);
 
             if (buildingChoice === "One World Trade Center") {
                 startPlaneAnimation();
