@@ -252,12 +252,21 @@
             levelSelect.innerHTML = '';
 
             if (building.floors > 1) {
-                building.heights.forEach((height, index) => {
-                    const option = document.createElement('option');
-                    option.value = height;
-                    option.text = `Kerros ${index + 1} (${height} m)`;
-                    levelSelect.appendChild(option);
-                });
+                if (building.heights.length > 0) {
+                    building.heights.forEach((height, index) => {
+                        const option = document.createElement('option');
+                        option.value = height;
+                        option.text = `Kerros ${index + 1} (${height} m)`;
+                        levelSelect.appendChild(option);
+                    });
+                } else {
+                    for (let i = 1; i <= building.floors; i++) {
+                        const option = document.createElement('option');
+                        option.value = i;
+                        option.text = `Kerros ${i}`;
+                        levelSelect.appendChild(option);
+                    }
+                }
             } else {
                 const option = document.createElement('option');
                 option.value = building.heights[0];
@@ -278,7 +287,12 @@
             let selectedHeight;
 
             if (building.floors > 1) {
-                selectedHeight = parseInt(document.getElementById('level').value);
+                if (building.heights.length > 0) {
+                    selectedHeight = parseInt(document.getElementById('level').value);
+                } else {
+                    const selectedFloor = parseInt(document.getElementById('level').value);
+                    selectedHeight = selectedFloor * 3; // Arvioitu korkeus kerroksille
+                }
             } else {
                 selectedHeight = parseInt(document.getElementById('level').value);
             }
