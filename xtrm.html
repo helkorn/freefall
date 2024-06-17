@@ -82,7 +82,7 @@
         .character {
             position: absolute;
             top: 0;
-            left: calc(50% - 30px); /* Center the character horizontally */
+            right: 60px;
             width: 60px;
             height: 66px;
             background-image: url('sprites/monkey_sprite_1.png');
@@ -117,8 +117,9 @@
             color: #FFFFFF;
         }
         @keyframes fall {
-            0% { top: 0; left: calc(50% - 30px); }
-            100% { top: calc(100% - 200px - 66px); left: calc(50% - 50px); }
+            0% { top: 0; right: 60px; }
+            10% { top: -20px; right: 70px; }
+            100% { top: calc(100% - 50px - 66px); right: 110px; }
         }
         @keyframes spin {
             0% { transform: rotate(0deg); }
@@ -319,18 +320,12 @@
             setTimeout(() => {
                 speedDisplay.textContent = `${speedKmH} km/h`;
                 speedDisplay.style.opacity = '1';
-
-                if (speedKmH > 70) {
-                    skeleton.style.opacity = '1';
-                    skeleton.style.animation = 'skeletonAscend 5000ms ease-in-out';
-                }
-                
-                character.style.animation = '';
+                skeleton.style.opacity = '1';
+                skeleton.style.animation = 'skeletonAscend 5000ms ease-in-out';
                 setTimeout(() => {
-                    if (speedKmH <= 70) {
-                        resetAfterJump();
-                    }
-                }, 5000); // Wait before allowing reset if speed is less than 70 km/h
+                    skeleton.style.opacity = '0';
+                    resetAfterJump();
+                }, 5000); // Extended duration for skeleton ascent
             }, 3000);
         }
 
