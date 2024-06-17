@@ -117,9 +117,9 @@
             color: #FFFFFF;
         }
         @keyframes fall {
-            0% { top: 0; right: 60px; }
-            10% { top: -20px; right: 70px; }
-            100% { top: calc(100% - 200px - 66px); left: calc(50% - 50px); }
+            0% { top: 0; }
+            10% { top: -20px; }
+            100% { top: calc(100% - 50px - 66px); }
         }
         @keyframes spin {
             0% { transform: rotate(0deg); }
@@ -313,6 +313,10 @@
 
             jumpButton.style.display = 'none';
 
+            // Ensure the character starts at the correct horizontal position
+            character.style.top = '0';
+            character.style.right = '60px'; // Set this to the starting horizontal position of the character
+
             const spinDuration = (Math.random() * 2 + 1) * 1000; // Random spin duration between 1 and 3 seconds
 
             character.style.animation = `fall 3000ms ease-in, spin ${spinDuration}ms linear`;
@@ -320,18 +324,12 @@
             setTimeout(() => {
                 speedDisplay.textContent = `${speedKmH} km/h`;
                 speedDisplay.style.opacity = '1';
-
-                if (speedKmH > 70) {
-                    skeleton.style.opacity = '1';
-                    skeleton.style.animation = 'skeletonAscend 5000ms ease-in-out';
-                }
-                
-                character.style.animation = '';
+                skeleton.style.opacity = '1';
+                skeleton.style.animation = 'skeletonAscend 5000ms ease-in-out';
                 setTimeout(() => {
-                    if (speedKmH <= 70) {
-                        resetAfterJump();
-                    }
-                }, 5000); // Wait before allowing reset if speed is less than 70 km/h
+                    skeleton.style.opacity = '0';
+                    resetAfterJump();
+                }, 5000); // Extended duration for skeleton ascent
             }, 3000);
         }
 
