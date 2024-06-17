@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Extreme - XTRM</title>
+    <title>Freefall</title>
     <style>
         @font-face {
             font-family: 'C64';
@@ -12,7 +12,7 @@
         body {
             font-family: 'C64', monospace;
             background-color: #000000;
-            color: #FFFFFF;
+            color: #87CEFA;
             margin: 0;
             padding: 0;
             display: flex;
@@ -20,7 +20,6 @@
             align-items: flex-start;
             height: 100vh;
             overflow: hidden;
-            filter: grayscale(100%);
         }
         .container {
             position: relative;
@@ -31,27 +30,13 @@
             background-color: #0000FF;
             padding: 20px;
             box-sizing: border-box;
-            border: 4px solid #FF0000;
-            animation: borderAnimation 2s infinite;
-        }
-        @keyframes borderAnimation {
-            0% { border-color: #FF0000; }
-            50% { border-color: #000000; }
-            100% { border-color: #FF0000; }
-        }
-        @keyframes textBlink {
-            0% { color: #FFFFFF; }
-            50% { color: #FF0000; }
-            100% { color: #FFFFFF; }
+            border: 4px solid #000080;
         }
         #output {
             white-space: pre;
             text-align: left;
             margin-left: 10px;
-            color: #FFFFFF;
-        }
-        #titleText {
-            animation: textBlink 1s infinite;
+            color: #87CEFA;
         }
         .content {
             display: none;
@@ -63,7 +48,7 @@
         }
         select {
             background: black;
-            color: #FFFFFF;
+            color: #87CEFA;
             border: none;
             font-family: 'C64', monospace;
             font-size: 16px;
@@ -71,64 +56,55 @@
         }
         button {
             background: black;
-            color: #FFFFFF;
-            border: 1px solid #FFFFFF;
+            color: #87CEFA;
+            border: 1px solid #87CEFA;
             padding: 5px 10px;
             font-family: 'C64', monospace;
             font-size: 16px;
             cursor: pointer;
             margin-top: 10px;
         }
+        .line {
+            position: absolute;
+            top: 66px;
+            right: 0;
+            width: 200px;
+            height: 10px;
+            background: white;
+        }
         .character {
             position: absolute;
             top: 0;
-            right: 60px;
+            right: 0;
             width: 60px;
             height: 66px;
             background-image: url('sprites/monkey_sprite_1.png');
             background-size: cover;
             animation: turn 2000ms steps(6) infinite;
-            filter: grayscale(100%);
         }
-        .skyscraper {
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 100px;
-            height: 100%;
-            background-image: url('skyscraper.png');
-            background-size: contain;
-            background-repeat: repeat-y;
-        }
-        .street {
+        .water {
             position: absolute;
             bottom: 0;
             left: 0;
             width: 100%;
             height: 100px;
-            background: url('street.png') repeat-x;
-            filter: grayscale(100%);
+            background: url('water_texture.png') repeat-x;
         }
         .speed-display {
             position: absolute;
             bottom: 10px;
             left: 10px;
             font-size: 1.5em;
-            color: #FFFFFF;
+            color: #444444; /* Change to darker color */
         }
-        @keyframes fall {
-            0% { top: 0; right: 60px; }
-            10% { top: -20px; right: 70px; }
-            100% { top: calc(100% - 50px - 66px); right: 110px; }
+        @keyframes jumpAndFall {
+            0% { top: 0; right: 0; }
+            10% { top: -20px; right: 10px; } /* Simulate jump upwards and move slightly left */
+            100% { top: calc(100% - 50px - 66px); right: 50px; } /* Final position slightly left */
         }
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
-        }
-        @keyframes showSpeed {
-            to {
-                opacity: 1;
-            }
         }
         @keyframes splash {
             0% { opacity: 1; }
@@ -143,53 +119,19 @@
             83% { background-image: url('sprites/monkey_sprite_6.png'); }
             100% { background-image: url('sprites/monkey_sprite_1.png'); }
         }
-        @keyframes planeFly {
-            0% { left: -100px; top: 50px; }
-            100% { left: calc(100% - 100px); top: 200px; }
-        }
         .splash {
             position: absolute;
             width: 100px;
             height: 100px;
             top: calc(100% - 200px);
             left: calc(50% - 50px);
-            background-image: url('skeleton.png');
+            background-image: url('splash.svg');
             background-size: contain;
             background-repeat: no-repeat;
             opacity: 0;
-            filter: grayscale(100%);
         }
-        .plane {
-            position: absolute;
-            width: 100px;
-            height: 50px;
-            background-image: url('jet.png');
-            background-size: contain;
-            background-repeat: no-repeat;
-            display: none;
-        }
-        .broken {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 2em;
-            color: red;
-            z-index: 10;
-        }
-        video.fullscreen {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            z-index: 20;
+        .extreme-button {
+            opacity: 0.3; /* Vielä haaleampi */
         }
     </style>
 </head>
@@ -198,176 +140,157 @@
         <div id="output"></div>
         <div id="content" class="content">
             <div>
-                <label for="building">Rakennus:</label>
-                <select id="building" onchange="updateLevels()">
-                    <!-- Rakennukset täytetään JavaScriptillä -->
+                <label for="laiva">Valitse laiva:</label>
+                <select id="laiva" onchange="updateDecks()">
+                    <!-- Laivat täytetään JavaScriptillä -->
                 </select>
             </div>
             <div class="selection-container">
                 <div>
-                    <label for="level">Taso:</label>
-                    <select id="level">
-                        <!-- Tasot täytetään JavaScriptillä -->
+                    <label for="kansi">Kansi:</label>
+                    <select id="kansi">
+                        <!-- Kannet täytetään JavaScriptillä -->
+                    </select>
+                </div>
+                <div>
+                    <label for="kaide">Seisotko kaiteella?</label>
+                    <select id="kaide">
+                        <option value="ei">Ei</option>
+                        <option value="kyllä">Kyllä</option>
                     </select>
                 </div>
             </div>
             <button onclick="laskeJaHyppaa()" id="jumpButton">HYPPÄÄ</button>
+            <button onclick="goToExtremeMode()" id="extremeButton" class="extreme-button">EXTREME MODE</button>
         </div>
-        <div class="skyscraper" id="skyscraper"></div>
+        <div class="line"></div>
         <div class="character" id="character"></div>
-        <div class="street"></div>
+        <div class="water"></div>
         <div class="speed-display" id="speedDisplay">0 km/h</div>
         <div class="splash" id="splash"></div>
-        <div class="plane" id="plane"></div>
     </div>
     <script>
-        const buildings = {
-            "Taipei 101": { floors: 101, heights: [] },
-            "Burj Khalifa": { floors: 163, heights: [] },
-            "One World Trade Center": { floors: 104, heights: [] },
-            "Näsinneula": { floors: 1, heights: [120] },
-            "Olympiastadionin torni": { floors: 1, heights: [72] },
-            "Kuopion Puijon torni": { floors: 1, heights: [75] },
-            "Turun tuomiokirkko": { floors: 1, heights: [101] },
-            "Vapaudenpatsas": { floors: 1, heights: [93] },
-            "Eiffel-torni": { floors: 3, heights: [57, 115, 276] }
-        };
+        const ships = {};
 
-        function populateBuildingOptions() {
-            const buildingSelect = document.getElementById('building');
-            Object.keys(buildings).forEach(building => {
-                const option = document.createElement('option');
-                option.value = building;
-                option.text = building;
-                buildingSelect.appendChild(option);
+        fetch('ships.csv')
+            .then(response => response.text())
+            .then(data => {
+                const lines = data.split('\n').slice(1);
+                lines.forEach(line => {
+                    const [ship, decks, belowWaterline, ...allowedDecks] = line.split(',');
+                    ships[ship] = {
+                        decks: parseInt(decks),
+                        belowWaterline: parseInt(belowWaterline),
+                        allowedDecks: allowedDecks.map(Number)
+                    };
+                });
+                populateShipOptions();
             });
-            updateLevels();
+
+        function populateShipOptions() {
+            const shipSelect = document.getElementById('laiva');
+            Object.keys(ships).forEach(ship => {
+                const option = document.createElement('option');
+                option.value = ship;
+                option.text = ship;
+                shipSelect.appendChild(option);
+            });
+            updateDecks();
         }
 
-        function updateLevels() {
-            const buildingChoice = document.getElementById('building').value;
-            const building = buildings[buildingChoice];
-            const levelSelect = document.getElementById('level');
-            levelSelect.innerHTML = '';
+        function updateDecks() {
+            const shipChoice = document.getElementById('laiva').value;
+            const ship = ships[shipChoice];
+            const deckSelect = document.getElementById('kansi');
+            deckSelect.innerHTML = '';
 
-            if (building.floors > 1) {
-                for (let i = 1; i <= building.floors; i++) {
-                    const option = document.createElement('option');
-                    option.value = i;
-                    option.text = `Kerros ${i}`;
-                    levelSelect.appendChild(option);
-                }
-            } else {
-                building.heights.forEach(height => {
-                    const option = document.createElement('option');
-                    option.value = height;
-                    option.text = `Näköalataso ${height} m`;
-                    levelSelect.appendChild(option);
-                });
+            for (let i = 0; i < ship.allowedDecks.length; i++) {
+                const option = document.createElement('option');
+                option.value = ship.allowedDecks[i];
+                option.text = `Kansi ${ship.allowedDecks[i]}`;
+                deckSelect.appendChild(option);
             }
         }
 
         function calculateSpeed(height) {
             const g = 9.81; // Painovoiman kiihtyvyys m/s^2
             const speed = Math.sqrt(2 * g * height); // Lasketaan nopeus m/s
-            return Math.min(speed * 3.6, 200).toFixed(2); // Muutetaan nopeus km/h ja rajataan 200 km/h
+            return speed; // Muutetaan nopeus m/s
         }
 
         function laskeJaHyppaa() {
-            const buildingChoice = document.getElementById('building').value;
-            const building = buildings[buildingChoice];
-            let selectedHeight;
+            const shipChoice = document.getElementById('laiva').value;
+            const selectedDeck = parseInt(document.getElementById('kansi').value);
+            const belowWaterline = ships[shipChoice].belowWaterline;
+            let jumpHeight = (selectedDeck - belowWaterline) * 3; // Kannen korkeus arvioitu 3 metriksi
 
-            if (building.floors > 1) {
-                const selectedFloor = parseInt(document.getElementById('level').value);
-                selectedHeight = selectedFloor * 3; // Arvioitu korkeus kerroksille
-            } else {
-                selectedHeight = parseInt(document.getElementById('level').value);
+            const railChoice = document.getElementById('kaide').value;
+            if (railChoice === 'kyllä') {
+                jumpHeight += 1; // Lisää yksi metri jos seisotaan kaiteen päällä
             }
 
-            if (buildingChoice === "One World Trade Center") {
-                startPlaneAnimation();
-            } else {
-                const speedKmH = calculateSpeed(selectedHeight);
-                startJumpAnimation(speedKmH);
-            }
+            const speedMPS = calculateSpeed(jumpHeight);
+
+            startJumpAnimation(speedMPS, jumpHeight);
         }
 
-        function startJumpAnimation(speedKmH) {
+        function startJumpAnimation(speedMPS, jumpHeight) {
             const character = document.getElementById('character');
             const speedDisplay = document.getElementById('speedDisplay');
             const jumpButton = document.getElementById('jumpButton');
+            const extremeButton = document.getElementById('extremeButton');
             const splash = document.getElementById('splash');
 
             jumpButton.style.display = 'none';
+            extremeButton.style.display = 'none';
 
             const spinDuration = (Math.random() * 2 + 1) * 1000; // Random spin duration between 1 and 3 seconds
+            const fallDuration = 3000; // 3 seconds fall duration
+            const startFallTime = performance.now() + (fallDuration * 0.1); // Start speed measurement after 10% of the fall duration
 
-            character.style.animation = `fall 3000ms ease-in, spin ${spinDuration}ms linear`;
+            character.style.animation = `jumpAndFall ${fallDuration}ms ease-in, spin ${spinDuration}ms linear`;
 
-            setTimeout(() => {
-                speedDisplay.textContent = `${speedKmH} km/h`;
-                speedDisplay.style.opacity = '1';
-                splash.style.animation = 'splash 1000ms ease-in-out'; // Extended splash duration
-                setTimeout(() => {
-                    splash.style.opacity = '0';
-                    resetAfterJump(); // Reset after the splash
-                }, 1000); // Extended splash duration
-            }, 3000);
-        }
+            function updateSpeedDisplay(time) {
+                if (time >= startFallTime) {
+                    const elapsed = time - startFallTime;
+                    const elapsedSeconds = elapsed / 1000;
+                    const currentSpeedMPS = Math.min(speedMPS, speedMPS * (elapsedSeconds / (fallDuration / 1000)));
+                    const currentSpeedKPH = (currentSpeedMPS * 3.6).toFixed(2);
+                    speedDisplay.textContent = `${currentSpeedKPH} km/h`;
 
-        function startPlaneAnimation() {
-            const plane = document.getElementById('plane');
-            plane.style.display = 'block';
-            plane.style.animation = 'planeFly 5s linear';
+                    if (elapsed < fallDuration * 0.9) {
+                        requestAnimationFrame(updateSpeedDisplay);
+                    } else {
+                        speedDisplay.textContent = `${(speedMPS * 3.6).toFixed(2)} km/h`;
+                        splash.style.animation = 'splash 500ms ease-in-out';
+                        setTimeout(() => {
+                            splash.style.opacity = '0';
+                            resetAfterJump(); // Reset after the splash
+                        }, 500);
+                    }
+                } else {
+                    requestAnimationFrame(updateSpeedDisplay);
+                }
+            }
 
-            setTimeout(() => {
-                showBrokenMessage();
-                setTimeout(playVideo, 2000); // Delay before playing video
-            }, 5000); // Time for plane to reach skyscraper
-        }
-
-        function showBrokenMessage() {
-            const brokenMessage = document.createElement('div');
-            brokenMessage.className = 'broken';
-            brokenMessage.textContent = 'All systems failed...';
-            document.body.appendChild(brokenMessage);
-        }
-
-        function playVideo() {
-            const video = document.createElement('video');
-            video.className = 'fullscreen';
-            video.src = 'NagarJuna_Cement.mp4';
-            video.autoplay = true;
-            video.onended = resetAfterJump;
-            document.body.appendChild(video);
+            requestAnimationFrame(updateSpeedDisplay);
         }
 
         function resetAfterJump() {
-            const brokenMessage = document.querySelector('.broken');
-            if (brokenMessage) brokenMessage.remove();
-
-            const video = document.querySelector('.fullscreen');
-            if (video) video.remove();
-
-            const pixels = document.querySelectorAll('.pixels');
-            pixels.forEach(pixel => pixel.remove());
-
             const character = document.getElementById('character');
-            const jumpButton = document.getElementById('jumpButton');
-            const plane = document.getElementById('plane');
-            const skyscraper = document.getElementById('skyscraper');
-
-            character.style.display = 'block';
             character.style.animation = 'turn 2000ms steps(6) infinite'; // Restart turning animation
-
-            plane.style.display = 'none';
-            plane.style.animation = '';
-
-            skyscraper.style.display = 'block';
-
+            const jumpButton = document.getElementById('jumpButton');
             jumpButton.style.display = 'block';
             jumpButton.textContent = 'HYPPÄÄ';
+            const extremeButton = document.getElementById('extremeButton');
+            extremeButton.style.display = 'block';
+            const splash = document.getElementById('splash');
+            splash.style.animation = '';
+            // Ei piiloteta nopeusnäyttöä
+        }
+
+        function goToExtremeMode() {
+            window.location.href = 'xtrm.html';
         }
 
         function typeWriter(text, i, fnCallback, speed = 50) {
@@ -385,8 +308,14 @@
         }
 
         function startTextAnimation() {
-            const text = `EXTREME XTRM
-No 2moro
+            const text = `*** FREEFALL V 1.0 ***
+READY.
+
+
+
+
+
+
 `;
             typeWriter(text, 0, () => {
                 document.getElementById("content").style.display = "block";
@@ -395,8 +324,8 @@ No 2moro
 
         document.addEventListener("DOMContentLoaded", function() {
             startTextAnimation();
-            populateBuildingOptions();
         });
     </script>
 </body>
 </html>
+
