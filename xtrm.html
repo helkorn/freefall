@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Freefall - Extreme Mode</title>
+    <title>Extreme - XTRM</title>
     <style>
         @font-face {
             font-family: 'C64';
@@ -153,7 +153,7 @@
             height: 100px;
             top: calc(100% - 200px);
             left: calc(50% - 50px);
-            background-image: url('splash.png');
+            background-image: url('skeleton.png');
             background-size: contain;
             background-repeat: no-repeat;
             opacity: 0;
@@ -385,14 +385,8 @@
         }
 
         function startTextAnimation() {
-            const text = `*** FREEFALL XTRM ***
-Version 1.2: No 2moro
-
-
-
-
-
-
+            const text = `EXTREME XTRM
+No 2moro
 `;
             typeWriter(text, 0, () => {
                 document.getElementById("content").style.display = "block";
@@ -406,4 +400,3 @@ Version 1.2: No 2moro
     </script>
 </body>
 </html>
-
