@@ -319,12 +319,18 @@
             setTimeout(() => {
                 speedDisplay.textContent = `${speedKmH} km/h`;
                 speedDisplay.style.opacity = '1';
-                skeleton.style.opacity = '1';
-                skeleton.style.animation = 'skeletonAscend 5000ms ease-in-out';
+
+                if (speedKmH > 70) {
+                    skeleton.style.opacity = '1';
+                    skeleton.style.animation = 'skeletonAscend 5000ms ease-in-out';
+                }
+                
+                character.style.animation = '';
                 setTimeout(() => {
-                    skeleton.style.opacity = '0';
-                    resetAfterJump();
-                }, 5000); // Extended duration for skeleton ascent
+                    if (speedKmH <= 70) {
+                        resetAfterJump();
+                    }
+                }, 5000); // Wait before allowing reset if speed is less than 70 km/h
             }, 3000);
         }
 
