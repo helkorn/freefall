@@ -33,6 +33,7 @@
             box-sizing: border-box;
             border: 4px solid #FF0000;
             animation: borderAnimation 2s infinite;
+            filter: none; /* Poista harmaasävysuodatin tästä elementistä */
         }
         @keyframes borderAnimation {
             0% { border-color: #FF0000; }
@@ -278,7 +279,6 @@
                 speedDisplay.style.opacity = '1';
                 skeleton.style.opacity = '1'; // Extended splash duration
                 setTimeout(() => {
-                    
                     resetAfterJump(); // Reset after the splash
                 }, 1000); // Extended splash duration
             }, 3000);
@@ -291,7 +291,7 @@
             jumpButton.style.display = 'block';
             jumpButton.textContent = 'HYPPÄÄ';
             const skeleton = document.getElementById('skeleton');
-            splash.style.animation = '';
+            skeleton.style.animation = '';
             // Ei piiloteta nopeusnäyttöä
         }
 
