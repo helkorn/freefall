@@ -130,9 +130,9 @@
                 opacity: 1;
             }
         }
-        @keyframes ascend {
-            0% { top: calc(100% - 200px); opacity: 1; }
-            100% { top: -100px; opacity: 1; }
+        @keyframes splash {
+            0% { opacity: 1; }
+            100% { opacity: 0; }
         }
         @keyframes turn {
             0% { background-image: url('sprites/monkey_sprite_1.png'); }
@@ -156,9 +156,8 @@
             background-image: url('skeleton.png');
             background-size: contain;
             background-repeat: no-repeat;
-            opacity: 1;
+            opacity: 0;
             filter: grayscale(100%);
-            animation: ascend 3s ease-in-out;
         }
         .plane {
             position: absolute;
@@ -223,67 +222,16 @@
     </div>
     <script>
         const buildings = {
-            "Big Ben": {
-                floors: 6, heights: [
-                    { name: "Ground Floor", height: 12 },
-                    { name: "Service Room", height: 35 },
-                    { name: "Clock Room", height: 55 },
-                    { name: "Belfry", height: 61 },
-                    { name: "Maintenance Level", height: 84 },
-                    { name: "Uppermost Windows", height: 93 }
-                ]
-            },
-            "Eiffel-torni": {
-                floors: 6, heights: [
-                    { name: "Näyttelyt", height: 57 },
-                    { name: "Ravintolat", height: 115 },
-                    { name: "Huoltokerrokset", height: 200 },
-                    { name: "Näköalatasanne", height: 276 },
-                    { name: "Ylin taso", height: 276 },
-                    { name: "Antennitaso", height: 330 }
-                ]
-            },
+            "Big Ben": { floors: 6, heights: [12, 30, 55, 62, 84, 92] },
+            "Eiffel-torni": { floors: 6, heights: [57, 115, 200, 276, 276, 330] },
             "Empire State Building": { floors: 102, heights: [] },
-            "Gizan pyramidi": {
-                floors: 2, heights: [
-                    { name: "Ascending Passage", height: 17 },
-                    { name: "Summit", height: 139 }
-                ]
-            },
-            "Kuopion Puijon torni": {
-                floors: 3, heights: [
-                    { name: "Ravintolat", height: 16 },
-                    { name: "Panoraamaikkunat", height: 44 },
-                    { name: "Näköalataso", height: 75 }
-                ]
-            },
+            "Gizan pyramidi": { floors: 2, heights: [17, 139] },
+            "Kuopion Puijon torni": { floors: 3, heights: [16, 44, 75] },
             "Olympiastadionin torni": { floors: 1, heights: [72] },
             "One World Trade Center": { floors: 104, heights: [] },
-            "Tampereen Näsinneula": {
-                floors: 4, heights: [
-                    { name: "Näköalataso", height: 120 },
-                    { name: "Pyörivä ravintola", height: 124 },
-                    { name: "Huoltotaso", height: 135 },
-                    { name: "Antennitaso", height: 168 }
-                ]
-            },
-            "Turun tuomiokirkko": {
-                floors: 6, heights: [
-                    { name: "Parvi", height: 10 },
-                    { name: "Huoltotilat", height: 18 },
-                    { name: "Kellon huoltotaso", height: 40 },
-                    { name: "Kellotapuli", height: 50 },
-                    { name: "Huoltoluukut", height: 85 },
-                    { name: "Tornin huippu", height: 101 }
-                ]
-            },
-            "Vapaudenpatsas": {
-                floors: 3, heights: [
-                    { name: "Pedestal Museum", height: 27 },
-                    { name: "Observation Deck", height: 47 },
-                    { name: "Torch Observation Deck", height: 93 }
-                ]
-            }
+            "Tampereen Näsinneula": { floors: 4, heights: [120, 124, 135, 168] },
+            "Turun tuomiokirkko": { floors: 6, heights: [10, 18, 40, 50, 85, 101] },
+            "Vapaudenpatsas": { floors: 3, heights: [27, 47, 93] }
         };
 
         function populateBuildingOptions() {
@@ -303,12 +251,19 @@
             const levelSelect = document.getElementById('level');
             levelSelect.innerHTML = '';
 
-            building.heights.forEach(level => {
+            if (building.floors > 1) {
+                building.heights.forEach((height, index) => {
+                    const option = document.createElement('option');
+                    option.value = height;
+                    option.text = `Kerros ${index + 1} (${height} m)`;
+                    levelSelect.appendChild(option);
+                });
+            } else {
                 const option = document.createElement('option');
-                option.value = level.height;
-                option.text = `${level.name} ${level.height} m`;
+                option.value = building.heights[0];
+                option.text = `Näköalataso ${building.heights[0]} m`;
                 levelSelect.appendChild(option);
-            });
+            }
         }
 
         function calculateSpeed(height) {
@@ -320,7 +275,13 @@
         function laskeJaHyppaa() {
             const buildingChoice = document.getElementById('building').value;
             const building = buildings[buildingChoice];
-            const selectedHeight = parseInt(document.getElementById('level').value);
+            let selectedHeight;
+
+            if (building.floors > 1) {
+                selectedHeight = parseInt(document.getElementById('level').value);
+            } else {
+                selectedHeight = parseInt(document.getElementById('level').value);
+            }
 
             if (buildingChoice === "One World Trade Center") {
                 startPlaneAnimation();
@@ -345,10 +306,11 @@
             setTimeout(() => {
                 speedDisplay.textContent = `${speedKmH} km/h`;
                 speedDisplay.style.opacity = '1';
-                splash.style.opacity = '1';
+                splash.style.animation = 'splash 1000ms ease-in-out'; // Extended splash duration
                 setTimeout(() => {
+                    splash.style.opacity = '0';
                     resetAfterJump(); // Reset after the splash
-                }, 3000); // Extended splash duration
+                }, 1000); // Extended splash duration
             }, 3000);
         }
 
@@ -442,4 +404,3 @@ no 2moro
     </script>
 </body>
 </html>
-
