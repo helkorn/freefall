@@ -9,7 +9,11 @@ body {
 }
 
 .svg-container {
-  position: relative;
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  width: 200px;
+  height: 150px;
 }
 
 #speed {
@@ -24,21 +28,7 @@ body {
 }
 
 #meter-bg-bar {
-  animation: dash 4s linear forwards infinite;
   stroke-dasharray: 615;
+  stroke-dashoffset: 615;
 }
 
-@keyframes dash {
-  0%, 100% {
-    stroke-dashoffset: 615;
-  }
-  25% {
-    stroke-dashoffset: 0;
-  }
-  50% {
-    stroke-dashoffset: 307.5;
-  }
-  75% {
-    stroke-dashoffset: 0;
-  }
-}
