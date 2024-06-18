@@ -119,7 +119,7 @@
         @keyframes fall {
             0% { top: 0; right: 60px; }
             10% { top: -20px; right: 70px; }
-            100% { top: calc(100% - 50px - 66px); right: calc(50% - 30px); }
+            100% { top: calc(50% - 66px); right: calc(50% - 30px); } /* Muutettu laskeutumispaikka keskelle tietä */
         }
         @keyframes spin {
             0% { transform: rotate(0deg); }
@@ -316,6 +316,10 @@
             const spinDuration = (Math.random() * 2 + 1) * 1000; // Random spin duration between 1 and 3 seconds
 
             character.style.animation = `fall 3000ms ease-in, spin ${spinDuration}ms linear`;
+
+            // Muutettu liu'utus vasemmalle alkamaan heti hypyn alkaessa
+            character.style.transition = 'transform 3000ms linear';
+            character.style.transform = 'translateX(-100px)';
 
             setTimeout(() => {
                 speedDisplay.textContent = `${speedKmH} km/h`;
