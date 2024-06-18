@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="fi">
 <head>
 <meta charset="utf-8"/>
@@ -223,16 +222,87 @@
 </div>
 <script>
         const buildings = {
-            "Big Ben": { floors: 6, heights: [12, 30, 55, 62, 84, 92] },
-            "Eiffel-torni": { floors: 6, heights: [57, 115, 200, 276, 276, 330] },
-            "Empire State Building": { floors: 102, heights: [] },
-            "Gizan pyramidi": { floors: 2, heights: [17, 139] },
-            "Kuopion Puijon torni": { floors: 3, heights: [16, 44, 75] },
-            "Olympiastadionin torni": { floors: 1, heights: [72] },
-            "One World Trade Center": { floors: 104, heights: [] },
-            "Tampereen Näsinneula": { floors: 4, heights: [120, 124, 135, 168] },
-            "Turun tuomiokirkko": { floors: 6, heights: [10, 18, 40, 50, 85, 101] },
-            "Vapaudenpatsas": { floors: 3, heights: [27, 47, 93] }
+            "Big Ben": {
+                floors: 6,
+                heights: [
+                    { name: "First Floor (Ground Floor)", height: 12 },
+                    { name: "Maintenance Level", height: 30 },
+                    { name: "Clock Room", height: 55 },
+                    { name: "Bell Room", height: 62 },
+                    { name: "Service Level", height: 84 },
+                    { name: "Lantern Room", height: 92 }
+                ]
+            },
+            "Eiffel Tower": {
+                floors: 6,
+                heights: [
+                    { name: "Exhibition Level", height: 57 },
+                    { name: "Restaurants", height: 115 },
+                    { name: "Maintenance Levels", height: 200 },
+                    { name: "Observation Deck", height: 276 },
+                    { name: "Top Level", height: 276 },
+                    { name: "Antenna Level", height: 330 }
+                ]
+            },
+            "Turun tuomiokirkko": {
+                floors: 6,
+                heights: [
+                    { name: "Gallery", height: 10 },
+                    { name: "Maintenance Rooms", height: 18 },
+                    { name: "Clock Maintenance Level", height: 40 },
+                    { name: "Bell Tower", height: 50 },
+                    { name: "Service Hatches", height: 85 },
+                    { name: "Tower Peak", height: 101 }
+                ]
+            },
+            "Tampereen Näsinneula": {
+                floors: 4,
+                heights: [
+                    { name: "Observation Deck", height: 120 },
+                    { name: "Revolving Restaurant", height: 124 },
+                    { name: "Maintenance Level", height: 135 },
+                    { name: "Antenna Level", height: 168 }
+                ]
+            },
+            "Statue of Liberty": {
+                floors: 3,
+                heights: [
+                    { name: "Pedestal Museum", height: 27 },
+                    { name: "Observation Deck", height: 47 },
+                    { name: "Torch Observation Deck", height: 93 }
+                ]
+            },
+            "The Great Pyramid of Giza": {
+                floors: 2,
+                heights: [
+                    { name: "Ascending Passage", height: 17 },
+                    { name: "Summit", height: 139 }
+                ]
+            },
+            "Puijon Torni": {
+                floors: 3,
+                heights: [
+                    { name: "Restaurants", height: 16 },
+                    { name: "Panorama Windows", height: 44 },
+                    { name: "Observation Deck", height: 75 }
+                ]
+            },
+            "Empire State Building": {
+                floors: 3,
+                heights: [
+                    { name: "86th Floor Observation Deck", height: 320 },
+                    { name: "102nd Floor Observation Deck", height: 381 },
+                    { name: "Antenna Spire", height: 443 }
+                ]
+            },
+            "One World Trade Center": {
+                floors: 3,
+                heights: [
+                    { name: "Main Observatory", height: 381 },
+                    { name: "Roof", height: 417 },
+                    { name: "Antenna Spire", height: 541 }
+                ]
+            }
         };
 
         function populateBuildingOptions() {
@@ -252,51 +322,24 @@
             const levelSelect = document.getElementById('level');
             levelSelect.innerHTML = '';
 
-            if (building.floors > 1) {
-                if (building.heights.length > 0) {
-                    building.heights.forEach((height, index) => {
-                        const option = document.createElement('option');
-                        option.value = height;
-                        option.text = `Kerros ${index + 1} (${height} m)`;
-                        levelSelect.appendChild(option);
-                    });
-                } else {
-                    for (let i = 1; i <= building.floors; i++) {
-                        const option = document.createElement('option');
-                        option.value = i;
-                        option.text = `Kerros ${i}`;
-                        levelSelect.appendChild(option);
-                    }
-                }
-            } else {
+            building.heights.forEach((floor, index) => {
                 const option = document.createElement('option');
-                option.value = building.heights[0];
-                option.text = `Näköalataso ${building.heights[0]} m`;
+                option.value = floor.height;
+                option.text = `${floor.name} (${floor.height} m)`;
                 levelSelect.appendChild(option);
-            }
+            });
         }
 
         function calculateSpeed(height) {
-            const g = 9.81; // Painovoiman kiihtyvyys m/s^2
-            const speed = Math.sqrt(2 * g * height); // Lasketaan nopeus m/s
-            return Math.min(speed * 3.6, 200).toFixed(2); // Muutetaan nopeus km/h ja rajataan 200 km/h
+            const g = 9.81; // Gravitational acceleration m/s^2
+            const speed = Math.sqrt(2 * g * height); // Calculating speed in m/s
+            return Math.min(speed * 3.6, 200).toFixed(2); // Converting speed to km/h and capping at 200 km/h
         }
 
         function laskeJaHyppaa() {
             const buildingChoice = document.getElementById('building').value;
             const building = buildings[buildingChoice];
-            let selectedHeight;
-
-            if (building.floors > 1) {
-                if (building.heights.length > 0) {
-                    selectedHeight = parseInt(document.getElementById('level').value);
-                } else {
-                    const selectedFloor = parseInt(document.getElementById('level').value);
-                    selectedHeight = selectedFloor * 3; // Arvioitu korkeus kerroksille
-                }
-            } else {
-                selectedHeight = parseInt(document.getElementById('level').value);
-            }
+            const selectedHeight = parseInt(document.getElementById('level').value);
 
             if (buildingChoice === "One World Trade Center") {
                 startPlaneAnimation();
