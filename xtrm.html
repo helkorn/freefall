@@ -1,10 +1,11 @@
 <!DOCTYPE html>
+
 <html lang="fi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Freefall - Extreme Mode</title>
-    <style>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Freefall - Extreme Mode</title>
+<style>
         @font-face {
             font-family: 'C64';
             src: url('fonts/fontC64.ttf') format('truetype');
@@ -119,7 +120,7 @@
         @keyframes fall {
             0% { top: 0; right: 60px; }
             10% { top: -20px; right: 70px; }
-            100% { top: calc(50% - 66px); right: calc(50% - 30px); } /* Muutettu laskeutumispaikka keskelle tietä */
+            100% { top: calc(100% - 50px - 66px); right: calc(50% - 30px); }
         }
         @keyframes spin {
             0% { transform: rotate(0deg); }
@@ -194,33 +195,33 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <div id="output"></div>
-        <div id="content" class="content">
-            <div>
-                <label for="building">Rakennus:</label>
-                <select id="building" onchange="updateLevels()">
-                    <!-- Rakennukset täytetään JavaScriptillä -->
-                </select>
-            </div>
-            <div class="selection-container">
-                <div>
-                    <label for="level">Taso:</label>
-                    <select id="level">
-                        <!-- Tasot täytetään JavaScriptillä -->
-                    </select>
-                </div>
-            </div>
-            <button onclick="laskeJaHyppaa()" id="jumpButton">HYPPÄÄ</button>
-        </div>
-        <div class="skyscraper" id="skyscraper"></div>
-        <div class="character" id="character"></div>
-        <div class="street"></div>
-        <div class="speed-display" id="speedDisplay">0 km/h</div>
-        <div class="skeleton" id="skeleton"></div>
-        <div class="plane" id="plane"></div>
-    </div>
-    <script>
+<div class="container">
+<div id="output"></div>
+<div class="content" id="content">
+<div>
+<label for="building">Rakennus:</label>
+<select id="building" onchange="updateLevels()">
+<!-- Rakennukset täytetään JavaScriptillä -->
+</select>
+</div>
+<div class="selection-container">
+<div>
+<label for="level">Taso:</label>
+<select id="level">
+<!-- Tasot täytetään JavaScriptillä -->
+</select>
+</div>
+</div>
+<button id="jumpButton" onclick="laskeJaHyppaa()">HYPPÄÄ</button>
+</div>
+<div class="skyscraper" id="skyscraper"></div>
+<div class="character" id="character"></div>
+<div class="street"></div>
+<div class="speed-display" id="speedDisplay">0 km/h</div>
+<div class="skeleton" id="skeleton"></div>
+<div class="plane" id="plane"></div>
+</div>
+<script>
         const buildings = {
             "Big Ben": { floors: 6, heights: [12, 30, 55, 62, 84, 92] },
             "Eiffel-torni": { floors: 6, heights: [57, 115, 200, 276, 276, 330] },
@@ -316,10 +317,6 @@
             const spinDuration = (Math.random() * 2 + 1) * 1000; // Random spin duration between 1 and 3 seconds
 
             character.style.animation = `fall 3000ms ease-in, spin ${spinDuration}ms linear`;
-
-            // Muutettu liu'utus vasemmalle alkamaan heti hypyn alkaessa
-            character.style.transition = 'transform 3000ms linear';
-            character.style.transform = 'translateX(-100px)';
 
             setTimeout(() => {
                 speedDisplay.textContent = `${speedKmH} km/h`;
