@@ -48,7 +48,7 @@
         <div class="row" style="flex:1">
             <div class="col d-flex">
                 <video-js id="vid1" style="flex:1;height:100%" class="vjs-default-skin flex-1" controls>
-                    <source id="video-source" src="https://camera2.stream.laval.fi/hls/stream.m3u8" type="application/x-mpegURL">
+                    <source src="https://camera1.stream.laval.fi/hls/stream.m3u8" type="application/x-mpegURL">
                 </video-js>
             </div>
         </div>
@@ -171,8 +171,6 @@
             document.getElementById(`cam-btn-${camera + 1}`).classList.add('active');
 
             // Update the video source dynamically
-            var videoSource = document.getElementById('video-source');
-            videoSource.src = sourceUrls[camera];
             player.src({ type: 'application/x-mpegURL', src: sourceUrls[camera] });
             player.play();
 
@@ -215,10 +213,14 @@
 
         // Switch to Camera 2 on page load
         window.onload = function () {
-            switchCamera(1);
+            document.getElementById('cam-btn-2').classList.add('active');
+            player.src({ type: 'application/x-mpegURL', src: sourceUrls[1] });
+            player.play();
+            setLabels();
         };
     </script>
 
 </body>
 
 </html>
+
