@@ -337,15 +337,26 @@
 
         function laskeJaHyppaa() {
             const buildingChoice = document.getElementById('building').value;
-            const building = buildings[buildingChoice];
             const selectedHeight = parseInt(document.getElementById('level').value);
 
-            if (buildingChoice === "One World Trade Center") {
+            if (buildingChoice === "Turun tuomiokirkko" && selectedHeight === 86) { // Jos Turun tuomiokirkko ja korkein taso valittuna
+                showCameraView();
+            } else if (buildingChoice === "One World Trade Center") {
                 startPlaneAnimation();
             } else {
                 const speedKmH = calculateSpeed(selectedHeight);
                 startJumpAnimation(speedKmH);
             }
+        }
+
+        function showCameraView() {
+            window.location.href = 'tornikamera.html';
+            setTimeout(() => {
+                window.history.back();
+                const selectedHeight = parseInt(document.getElementById('level').value);
+                const speedKmH = calculateSpeed(selectedHeight);
+                startJumpAnimation(speedKmH);
+            }, 4000); // 4 sekunnin viive ennen hypyn alkamista
         }
 
         function startJumpAnimation(speedKmH) {
@@ -445,15 +456,7 @@
         }
 
         function startTextAnimation() {
-            const text = `EXTREME XTRM
-no 2moro
-
-
-
-
-
-
-`;
+            const text = `EXTREME XTRM\nno 2moro\n\n\n\n\n\n\n`;
             typeWriter(text, 0, () => {
                 document.getElementById("content").style.display = "block";
             });
@@ -466,4 +469,3 @@ no 2moro
     </script>
 </body>
 </html>
-
