@@ -36,11 +36,9 @@
             <div class="col text-white ms-2">Turun Tuomiokirkko</div>
             <div class="col text-center">
                 <button type="button" onclick="switchCamera(0)" class="btn btn-sm btn-secondary rounded-0 cam-btn"
-                    id="cam-btn-1">Camera
-                    1</button>
+                    id="cam-btn-1">Camera 1</button>
                 <button type="button" onclick="switchCamera(1)" class="btn btn-sm btn-secondary rounded-0 cam-btn"
-                    id="cam-btn-2">Camera
-                    2</button>
+                    id="cam-btn-2">Camera 2</button>
             </div>
             <div class="col text-end me-2">
                 <span class="text-white" id="status-offline">OFFLINE</span>
@@ -57,17 +55,13 @@
         <div class="row bg-dark">
             <div class="col-8 ms-2">
                 <button type="button" onclick="goToPreset(1)" class="preset btn btn-sm btn-secondary rounded-0"
-                    id="loc-btn-1">Location
-                    1</button>
+                    id="loc-btn-1">Location 1</button>
                 <button type="button" onclick="goToPreset(2)" class="preset btn btn-sm btn-secondary rounded-0"
-                    id="loc-btn-2">Location
-                    2</button>
+                    id="loc-btn-2">Location 2</button>
                 <button type="button" onclick="goToPreset(3)" class="preset btn btn-sm btn-secondary rounded-0"
-                    id="loc-btn-3">Location
-                    3</button>
+                    id="loc-btn-3">Location 3</button>
                 <button type="button" onclick="goToPreset(4)" class="preset btn btn-sm btn-secondary rounded-0"
-                    id="loc-btn-4">Location
-                    4</button>
+                    id="loc-btn-4">Location 4</button>
             </div>
             <div class="col text-end text-white me-2">
                 <small>Current control delay 20-30 seconds.</small>
@@ -116,18 +110,14 @@
     <script>
         // Initialize player
         var player = videojs('vid1');
-        player.play();
-
-        // Send remote commands
-        var remoteUrl = "https://laval-remote.herokuapp.com/control?secret=tuomiokirkko"
-        // var remoteUrl = "http://localhost:8081/control?secret=tuomiokirkko"
 
         var sourceUrls = [
             'https://camera1.stream.laval.fi/hls/stream.m3u8',
             'https://camera2.stream.laval.fi/hls/stream.m3u8'
         ]
 
-        var activeCamera = 0;
+        // Asetetaan Camera 2 oletuskameraksi
+        var activeCamera = 1;
 
         // TODO: Fetch available presets for camera
         var cameras = [
@@ -197,7 +187,6 @@
                 "value": presetValue
             }));
 
-
             xhr.onload = function (response, err) {
                 var state = xhr.status;
                 if (state === 201) {
@@ -221,7 +210,8 @@
             }
         }
 
-        setLabels();
+        // Kutsutaan switchCamera(1) sivun lataamisen jälkeen
+        switchCamera(activeCamera);
     </script>
 
 </body>
