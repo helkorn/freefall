@@ -48,7 +48,7 @@
         <div class="row" style="flex:1">
             <div class="col d-flex">
                 <video-js id="vid1" style="flex:1;height:100%" class="vjs-default-skin flex-1" controls>
-                    <source src="https://camera1.stream.laval.fi/hls/stream.m3u8" type="application/x-mpegURL">
+                    <source id="video-source" src="https://camera1.stream.laval.fi/hls/stream.m3u8" type="application/x-mpegURL">
                 </video-js>
             </div>
         </div>
@@ -119,7 +119,6 @@
         // Set active camera to Camera 2 by default
         var activeCamera = 1;
 
-        // TODO: Fetch available presets for camera
         var cameras = [
             {
                 locations: [
@@ -156,7 +155,6 @@
         ];
 
         function setLabels() {
-            // Set the location button labels
             cameras[activeCamera].locations.forEach((location, index) => {
                 document.getElementById(`loc-btn-${index + 1}`).innerText = location.label;
             });
@@ -170,7 +168,6 @@
 
             document.getElementById(`cam-btn-${camera + 1}`).classList.add('active');
 
-            // Update the video source dynamically
             player.src({ type: 'application/x-mpegURL', src: sourceUrls[camera] });
             player.play();
 
@@ -178,7 +175,6 @@
         }
 
         function goToPreset(presetValue) {
-            // Send preset request to queue
             var xhr = new XMLHttpRequest();
             xhr.open("POST", remoteUrl, true);
             xhr.setRequestHeader('Content-Type', 'application/json');
@@ -194,7 +190,7 @@
                     console.log('Request received.');
                 }
                 if (state === 403) {
-                    console.error('Permision denied.');
+                    console.error('Permission denied.');
                 }
                 if (state === 429) {
                     console.error('Too many requests, slow down cowboy...')
@@ -211,11 +207,19 @@
             }
         }
 
-        // Switch to Camera 2 on page load
         window.onload = function () {
             document.getElementById('cam-btn-2').classList.add('active');
+
+            // Päivitetään videon lähde elementti
+            var videoSource = document.getElementById('video-source');
+            videoSource.src = sourceUrls[1];
+
+            // Päivitetään video.js player
             player.src({ type: 'application/x-mpegURL', src: sourceUrls[1] });
-            player.play();
+            player.ready(function () {
+                this.play();
+            });
+
             setLabels();
         };
     </script>
