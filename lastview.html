@@ -47,7 +47,7 @@
         </div>
         <div class="row" style="flex:1">
             <div class="col d-flex">
-                <video-js id="vid1" style="flex:1;height:100%" class="vjs-default-skin flex-1" controls muted autoplay>
+                <video-js id="vid1" style="flex:1;height:100%" class="vjs-default-skin flex-1" controls>
                     <source id="video-source" src="https://camera2.stream.laval.fi/hls/stream.m3u8" type="application/x-mpegURL">
                 </video-js>
             </div>
@@ -212,12 +212,12 @@
             var videoSource = document.getElementById('video-source');
             videoSource.src = sourceUrls[1];
 
-            player.muted(true);  // Video is muted
-            player.src({ type: 'application/x-mpegURL', src: sourceUrls[1] });
-            player.ready(function () {
-                this.play();
-                this.muted(false);  // Unmute after playback starts
-            });
+            setTimeout(function () {
+                player.src({ type: 'application/x-mpegURL', src: sourceUrls[1] });
+                player.ready(function () {
+                    this.play();
+                });
+            }, 500);  // Viive 500ms ennen toiston aloittamista
 
             setLabels();
         };
@@ -226,4 +226,3 @@
 </body>
 
 </html>
-
