@@ -34,37 +34,15 @@
     <div class="container-fluid d-flex flex-column p-0" style="height: 100vh;overflow:hidden">
         <div class="row bg-dark d-flex justify-content-between align-items-center">
             <div class="col text-white ms-2">Turun Tuomiokirkko</div>
-            <div class="col text-center">
-                <button type="button" onclick="switchCamera(0)" class="btn btn-sm btn-secondary rounded-0 cam-btn"
-                    id="cam-btn-1">Camera 1</button>
-                <button type="button" onclick="switchCamera(1)" class="btn btn-sm btn-secondary rounded-0 cam-btn"
-                    id="cam-btn-2">Camera 2</button>
-            </div>
             <div class="col text-end me-2">
-                <span class="text-white" id="status-offline">OFFLINE</span>
                 <span class="text-danger" id="status-online"><span class="blink">⬤</span> LIVE</span>
             </div>
         </div>
         <div class="row" style="flex:1">
             <div class="col d-flex">
-                <video-js id="vid1" style="flex:1;height:100%" class="vjs-default-skin flex-1" controls>
+                <video-js id="vid1" style="flex:1;height:100%" class="vjs-default-skin flex-1" controls muted autoplay>
                     <source id="video-source" src="https://camera2.stream.laval.fi/hls/stream.m3u8" type="application/x-mpegURL">
                 </video-js>
-            </div>
-        </div>
-        <div class="row bg-dark">
-            <div class="col-8 ms-2">
-                <button type="button" onclick="goToPreset(1)" class="preset btn btn-sm btn-secondary rounded-0"
-                    id="loc-btn-1">Location 1</button>
-                <button type="button" onclick="goToPreset(2)" class="preset btn btn-sm btn-secondary rounded-0"
-                    id="loc-btn-2">Location 2</button>
-                <button type="button" onclick="goToPreset(3)" class="preset btn btn-sm btn-secondary rounded-0"
-                    id="loc-btn-3">Location 3</button>
-                <button type="button" onclick="goToPreset(4)" class="preset btn btn-sm btn-secondary rounded-0"
-                    id="loc-btn-4">Location 4</button>
-            </div>
-            <div class="col text-end text-white me-2">
-                <small>Current control delay 20-30 seconds.</small>
             </div>
         </div>
     </div>
@@ -94,10 +72,6 @@
             }
         }
 
-        #status-offline {
-            display: none;
-        }
-
         #status-online {
             display: block;
         }
@@ -111,115 +85,14 @@
         // Initialize player
         var player = videojs('vid1');
 
-        var sourceUrls = [
-            'https://camera1.stream.laval.fi/hls/stream.m3u8',
-            'https://camera2.stream.laval.fi/hls/stream.m3u8'
-        ];
-
-        var activeCamera = 1;
-
-        var cameras = [
-            {
-                locations: [
-                    {
-                        label: 'Vanha Suurtori'
-                    },
-                    {
-                        label: 'Vartiovuori'
-                    },
-                    {
-                        label: 'Brahenpuisto'
-                    },
-                    {
-                        label: 'Aurajoki'
-                    }
-                ]
-            },
-            {
-                locations: [
-                    {
-                        label: 'Keskusta'
-                    },
-                    {
-                        label: 'Pääkirjasto'
-                    },
-                    {
-                        label: 'Aurajoki'
-                    },
-                    {
-                        label: 'Kauppatori'
-                    }
-                ]
-            }
-        ];
-
-        function setLabels() {
-            cameras[activeCamera].locations.forEach((location, index) => {
-                document.getElementById(`loc-btn-${index + 1}`).innerText = location.label;
-            });
-        }
-
-        function switchCamera(camera) {
-            activeCamera = camera;
-
-            var camButtons = [].slice.call(document.getElementsByClassName(`cam-btn`));
-            camButtons.forEach(btn => btn.classList.remove('active'));
-
-            document.getElementById(`cam-btn-${camera + 1}`).classList.add('active');
-
-            player.src({ type: 'application/x-mpegURL', src: sourceUrls[camera] });
-            player.play();
-
-            setLabels();
-        }
-
-        function goToPreset(presetValue) {
-            var xhr = new XMLHttpRequest();
-            xhr.open("POST", remoteUrl, true);
-            xhr.setRequestHeader('Content-Type', 'application/json');
-            xhr.send(JSON.stringify({
-                "action": "PRESET",
-                "target": activeCamera,
-                "value": presetValue
-            }));
-
-            xhr.onload = function (response, err) {
-                var state = xhr.status;
-                if (state === 201) {
-                    console.log('Request received.');
-                }
-                if (state === 403) {
-                    console.error('Permission denied.');
-                }
-                if (state === 429) {
-                    console.error('Too many requests, slow down cowboy...');
-
-                    var toastEl = document.getElementById('toast');
-                    var toast = new bootstrap.Toast(toastEl);
-                    toast.show();
-                }
-            };
-
-            xhr.onerror = function () {
-                var state = xhr.status;
-                console.log('Error received', state);
-            };
-        }
-
         window.onload = function () {
-            document.getElementById('cam-btn-2').classList.add('active');
-
-            var videoSource = document.getElementById('video-source');
-            videoSource.src = sourceUrls[1];
-
             setTimeout(function () {
-                player.src({ type: 'application/x-mpegURL', src: sourceUrls[1] });
                 player.ready(function () {
-                    this.play();
+                    this.play().catch(function(error) {
+                        console.log('Autoplay was prevented:', error);
+                    });
                 });
             }, 500);  // Viive 500ms ennen toiston aloittamista
-
-            setLabels();
         };
     </script>
 
