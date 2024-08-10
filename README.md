@@ -1,1 +1,1 @@
-Laivahyppypeli
+Hyppelypeli
