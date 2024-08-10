@@ -47,8 +47,8 @@
         </div>
         <div class="row" style="flex:1">
             <div class="col d-flex">
-                <video-js id="vid1" style="flex:1;height:100%" class="vjs-default-skin flex-1" controls>
-                    <source id="video-source" src="https://camera1.stream.laval.fi/hls/stream.m3u8" type="application/x-mpegURL">
+                <video-js id="vid1" style="flex:1;height:100%" class="vjs-default-skin flex-1" controls muted autoplay>
+                    <source id="video-source" src="https://camera2.stream.laval.fi/hls/stream.m3u8" type="application/x-mpegURL">
                 </video-js>
             </div>
         </div>
@@ -116,7 +116,6 @@
             'https://camera2.stream.laval.fi/hls/stream.m3u8'
         ];
 
-        // Set active camera to Camera 2 by default
         var activeCamera = 1;
 
         var cameras = [
@@ -193,31 +192,31 @@
                     console.error('Permission denied.');
                 }
                 if (state === 429) {
-                    console.error('Too many requests, slow down cowboy...')
+                    console.error('Too many requests, slow down cowboy...');
 
                     var toastEl = document.getElementById('toast');
                     var toast = new bootstrap.Toast(toastEl);
                     toast.show();
                 }
-            }
+            };
 
             xhr.onerror = function () {
                 var state = xhr.status;
                 console.log('Error received', state);
-            }
+            };
         }
 
         window.onload = function () {
             document.getElementById('cam-btn-2').classList.add('active');
 
-            // Päivitetään videon lähde elementti
             var videoSource = document.getElementById('video-source');
             videoSource.src = sourceUrls[1];
 
-            // Päivitetään video.js player
+            player.muted(true);  // Video is muted
             player.src({ type: 'application/x-mpegURL', src: sourceUrls[1] });
             player.ready(function () {
                 this.play();
+                this.muted(false);  // Unmute after playback starts
             });
 
             setLabels();
@@ -227,3 +226,4 @@
 </body>
 
 </html>
+
