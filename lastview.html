@@ -25,6 +25,7 @@
         window.dataLayer = window.dataLayer || [];
         function gtag() { dataLayer.push(arguments); }
         gtag('js', new Date());
+
         gtag('config', 'G-KTTH441JJJ');
     </script>
 </head>
@@ -40,7 +41,7 @@
         <div class="row" style="flex:1">
             <div class="col d-flex">
                 <video-js id="vid1" style="flex:1;height:100%" class="vjs-default-skin flex-1" controls muted autoplay>
-                    <source id="video-source" type="application/x-mpegURL">
+                    <source id="video-source" src="https://camera2.stream.laval.fi/hls/stream.m3u8" type="application/x-mpegURL">
                 </video-js>
             </div>
         </div>
@@ -48,6 +49,7 @@
 
     <div aria-live="polite" aria-atomic="true" class="d-flex justify-content-center align-items-center w-100"
         style="position:absolute;top:0;left:0;width:100vw;height:100vh;pointer-events: none;">
+
         <div id="toast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
             <div class="toast-header">
                 <strong class="me-auto">Alert</strong>
@@ -83,44 +85,12 @@
         // Initialize player
         var player = videojs('vid1');
 
-        function isCameraActive(url) {
-            return fetch(url, { method: 'HEAD' })
-                .then(response => response.ok)
-                .catch(() => false);
-        }
-
-        async function checkCameraAndSetSource() {
-            const camera1Url = 'https://camera1.stream.laval.fi/hls/stream.m3u8';
-            const camera2Url = 'https://camera2.stream.laval.fi/hls/stream.m3u8';
-
-            const camera1Active = await isCameraActive(camera1Url);
-
-            if (camera1Active) {
-                player.src({
-                    src: camera1Url,
-                    type: 'application/x-mpegURL'
-                });
-            } else {
-                const camera2Active = await isCameraActive(camera2Url);
-                if (camera2Active) {
-                    player.src({
-                        src: camera2Url,
-                        type: 'application/x-mpegURL'
-                    });
-                } else {
-                    console.error('Neither camera is available.');
-                }
-            }
-
-            player.play().catch(function (error) {
-                console.log('Autoplay was prevented:', error);
-            });
-        }
-
         window.onload = function () {
             setTimeout(function () {
                 player.ready(function () {
-                    checkCameraAndSetSource();
+                    this.play().catch(function(error) {
+                        console.log('Autoplay was prevented:', error);
+                    });
                 });
             }, 500);  // Viive 500ms ennen toiston aloittamista
         };
@@ -129,4 +99,3 @@
 </body>
 
 </html>
-
