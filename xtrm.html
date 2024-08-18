@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="fi">
 <head>
-    <meta charset="utf-8"/>
-    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title>Freefall - Extreme Mode</title>
-    <style>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Freefall - Extreme Mode</title>
+<style>
         @font-face {
             font-family: 'C64';
             src: url('fonts/fontC64.ttf') format('truetype');
@@ -210,34 +210,37 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <div id="output"></div>
-        <div class="content" id="content">
-            <div>
-                <label for="building">Rakennus:</label>
-                <select id="building" onchange="updateLevels()">
-                </select>
-            </div>
-            <div class="selection-container">
-                <div>
-                    <label for="level">Taso:</label>
-                    <select id="level">
-                    </select>
-                </div>
-            </div>
-            <button id="jumpButton" onclick="laskeJaHyppaa()">HYPPÄÄ</button>
-        </div>
-        <div class="skyscraper" id="skyscraper"></div>
-        <div class="character" id="character"></div>
-        <div class="street"></div>
-        <div class="speed-display" id="speedDisplay">0 km/h</div>
-        <div class="skeleton" id="skeleton"></div>
-        <div class="plane" id="plane"></div>
-        <div id="cameraView">
-            <iframe src="lastview.html"></iframe>
-        </div>
-    </div>
-    <script>
+<div class="container">
+<div id="output"></div>
+<div class="content" id="content">
+<div>
+<label for="building">Rakennus:</label>
+<select id="building" onchange="updateLevels()">
+<!-- Rakennukset täytetään JavaScriptillä -->
+</select>
+</div>
+<div class="selection-container">
+<div>
+<label for="level">Taso:</label>
+<select id="level">
+<!-- Tasot täytetään JavaScriptillä -->
+</select>
+</div>
+</div>
+<button id="jumpButton" onclick="laskeJaHyppaa()">HYPPÄÄ</button>
+</div>
+<div class="skyscraper" id="skyscraper"></div>
+<div class="character" id="character"></div>
+<div class="street"></div>
+<div class="speed-display" id="speedDisplay">0 km/h</div>
+<div class="skeleton" id="skeleton"></div>
+<div class="plane" id="plane"></div>
+<div id="cameraView">
+    <iframe src="lastview.html"></iframe>
+</div>
+</div>
+<script>
+        // JavaScript-koodi, joka liittyy peliin, pysyy muuttumattomana
         const buildings = {
             "Big Ben": {
                 floors: 6,
@@ -347,16 +350,16 @@
         }
 
         function calculateSpeed(height) {
-            const g = 9.81;
-            const speed = Math.sqrt(2 * g * height);
-            return Math.min(speed * 3.6, 200).toFixed(2);
+            const g = 9.81; // Gravitational acceleration m/s^2
+            const speed = Math.sqrt(2 * g * height); // Calculating speed in m/s
+            return Math.min(speed * 3.6, 200).toFixed(2); // Converting speed to km/h and capping at 200 km/h
         }
 
         function laskeJaHyppaa() {
             const buildingChoice = document.getElementById('building').value;
             const selectedHeight = parseInt(document.getElementById('level').value);
 
-            if (buildingChoice === "Turun tuomiokirkko" && selectedHeight === 86) {
+            if (buildingChoice === "Turun tuomiokirkko" && selectedHeight === 86) { // Jos Turun tuomiokirkko ja korkein taso valittuna
                 showCameraView();
             } else if (buildingChoice === "One World Trade Center") {
                 startPlaneAnimation();
@@ -374,7 +377,7 @@
                 const selectedHeight = parseInt(document.getElementById('level').value);
                 const speedKmH = calculateSpeed(selectedHeight);
                 startJumpAnimation(speedKmH);
-            }, 7000);
+            }, 7000); // 7 sekunnin viive ennen hypyn alkamista
         }
 
         function startJumpAnimation(speedKmH) {
@@ -385,7 +388,7 @@
 
             jumpButton.style.display = 'none';
 
-            const spinDuration = (Math.random() * 2 + 1) * 1000;
+            const spinDuration = (Math.random() * 2 + 1) * 1000; // Random spin duration between 1 and 3 seconds
 
             character.style.animation = `fall 3000ms ease-in, spin ${spinDuration}ms linear`;
 
@@ -393,11 +396,11 @@
                 speedDisplay.textContent = `${speedKmH} km/h`;
                 speedDisplay.style.opacity = '1';
                 skeleton.style.opacity = '1';
-                skeleton.style.animation = 'skeletonAscend 7000ms ease-in-out';
+                skeleton.style.animation = 'skeletonAscend 7000ms ease-in-out'; // Slower and more visible
                 setTimeout(() => {
                     skeleton.style.opacity = '0';
                     resetAfterJump();
-                }, 7000);
+                }, 7000); // Extended duration for skeleton ascent
             }, 3000);
         }
 
@@ -408,8 +411,8 @@
 
             setTimeout(() => {
                 showBrokenMessage();
-                setTimeout(playVideo, 2000);
-            }, 5000);
+                setTimeout(playVideo, 2000); // Delay before playing video
+            }, 5000); // Time for plane to reach skyscraper
         }
 
         function showBrokenMessage() {
@@ -435,16 +438,22 @@
             const video = document.querySelector('.fullscreen');
             if (video) video.remove();
 
+            const pixels = document.querySelectorAll('.pixels');
+            pixels.forEach(pixel => pixel.remove());
+
             const character = document.getElementById('character');
             const jumpButton = document.getElementById('jumpButton');
             const plane = document.getElementById('plane');
+            const skyscraper = document.getElementById('skyscraper');
             const skeleton = document.getElementById('skeleton');
 
             character.style.display = 'block';
-            character.style.animation = 'turn 2000ms steps(6) infinite';
+            character.style.animation = 'turn 2000ms steps(6) infinite'; // Restart turning animation
 
             plane.style.display = 'none';
             plane.style.animation = '';
+
+            skyscraper.style.display = 'block';
 
             skeleton.style.opacity = '0';
             skeleton.style.animation = '';
